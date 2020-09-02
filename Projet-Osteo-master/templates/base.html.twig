@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Bienvenu{% endblock %}</title>
+        {% block stylesheets %}
+            <!-- UIkit CSS -->
+            <link rel="stylesheet" href="{{ asset('css/uikit.min.css') }}" />
+            <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+            <style type="text/css">
+            @font-face {
+                font-family: 'Roboto';
+                src: url({{ asset('font/Roboto-Regular.ttf') }}) format('sans-serif');
+            }
+            </style>
+        {% endblock %}
+    </head>
+    <body>
+        <main class="uk-container uk-container-large">
+            {% block nav %}
+            {% endblock %}
+            {% block body %}
+            {% endblock %}
+        </main>
+        {% block javascripts %}
+            <script src={{ asset('js/jquery.js') }}> </script>
+            <!-- UIkit JS -->
+            <script src="https://cdn.jsdelivr.net/npm/uikit@3.5.3/dist/js/uikit.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/uikit@3.5.3/dist/js/uikit-icons.min.js"></script>
+        {% endblock %}
+    </body>
+</html>

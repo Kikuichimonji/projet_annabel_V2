@@ -1,0 +1,199 @@
+{% extends 'base.html.twig' %}
+{% block title %}Fiche patient{% endblock %}
+
+{% block nav %}
+{% set idc = app.request.attributes.get("_route_params").idc %}
+<nav class="uk-navbar-container" uk-navbar>
+    <div class="uk-navbar-left">
+        <ul class="uk-navbar-nav">
+           <li class="uk-active">
+                <a href="{{path('home_detail',{'id':idc})}}">Accueil - 
+                {% for cabinet in cabinets %}
+                    {% if cabinet.id == idc%}
+                        {{cabinet.libelle}}
+                    {% endif %}
+                {% endfor %}
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div >
+        <a class="uk-navbar-center" href=""><h1>Fiche Patient<h1></a>
+    </div>
+    
+    <div class="uk-navbar-right">
+        Connecté en tant que : <strong>{{app.user.username}}</strong> <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
+    </div>
+</nav>
+{% endblock %}
+
+{% block body %}
+{{form_start(form)}}
+    <h2>Administratif</h2>
+    {{ form_row(form.nom) }}
+    {{ form_row(form.prenom) }}
+    {{ form_row(form.sexe) }}
+    {{ form_row(form.dateNaissance) }}
+    {{ form_row(form.adresse) }}
+    {{ form_row(form.codePostal) }}
+    {{ form_row(form.ville) }}
+    {{ form_row(form.numFixe) }}
+    {{ form_row(form.numPortable) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.profession) }}
+    {{ form_row(form.loisir) }}
+
+    <h2>Antécédent</h2>
+     <div>  
+    {{ form_row(form.antTete) }}
+    {{ form_row(form.antOrl) }}
+    {{ form_row(form.antOphtalmo) }}
+    {{ form_row(form.antAuditif) }}
+    {{ form_row(form.antDent) }} 
+    {{ form_row(form.antEndoc) }}
+    {{ form_row(form.antPulmo) }}
+    {{ form_row(form.antCardia) }}
+    {{ form_row(form.antDigest) }}
+    {{ form_row(form.antUrin) }}
+    {{ form_row(form.antGyneco) }}
+    {{ form_row(form.antDermato) }}
+    {{ form_row(form.antFamille) }}
+    <h3>Traumatologie</h3>
+    {{ form_row(form.antTrauma) }}
+    <h3>Opérations</h3>
+    {{ form_row(form.antOpe) }}
+    <h3>Prise de médicaments</h3>
+    {{ form_row(form.antPriseMedic) }}
+    </div>
+    <span></span>
+    <h2>Consultations</h2>
+    <div id="consultation"
+        data-prototype="{{ form_widget(form.consultations.vars.prototype)|e }}"
+        data-widget-tags="{{ '<div class="consultblock"></div>'|e }}"
+        data-widget-counter="{{ form.consultations|length }}">
+        {% for consult in form.consultations %}
+            <div class="consultblock">
+                {{ form_errors(consult) }}
+                {{ form_widget(consult) }}
+            </div>
+        {% endfor %}
+    </div>
+    <button id='add'>Nouvelle sceance</button>
+
+
+{{ form_end(form) }}
+{% endblock %}
+{% block javascripts %}
+     {{ parent() }}
+
+     <script>      
+
+        function putDeleteButton($form,id)
+        {
+            let $deleteButton = $('<button type="button">Supprimer</button>')
+            $form.append($deleteButton)
+
+            /*let deleteButton = document.createElement("BUTTON")
+            deleteButton.innerHTML ="Supprimer"
+
+            let deleting = document.getElementsByClassName("consultblock")[id]
+            deleting.append(deleteButton)
+            
+            deleteButton.addEventListener("click",function(event){
+                event.preventDefault()
+                $form.remove()
+            });*/
+
+            $deleteButton.on('click', function() {
+                $form.remove()
+            })
+        }
+
+        function hideBlock(id)
+        {
+            var block = document.getElementById("patient_consultations_"+id)
+            block.style.display = "none"
+
+            let showButton = document.createElement("BUTTON")
+            showButton.innerHTML ="Détails"
+            var show = document.getElementsByClassName("consultblock")[id]
+            show.append(showButton)
+            show.append(document.getElementById("patient_consultations_"+id+"_date_consult").value)
+
+            showButton.addEventListener("click",function(event){
+                event.preventDefault()
+            });
+            
+        }
+
+        $(document).ready(function()
+        {
+            // Block permetant de modifier le selecteur d'id cabinet, pour la relation patient/cabinet
+            let collectionCounter = 0
+            var idCabinet = window.location.href.split("/");
+            idCabinet = idCabinet[4]
+            let pc = document.getElementById("patient_cabinet");
+            let counter = document.getElementsByClassName("consultblock").length;
+
+            [].forEach.call(pc.options,function(opt){
+                if(opt.value == idCabinet)
+                    opt.selected = true
+            });
+            
+            $collectionForms = $('#consultation');
+            $collectionForms.find('.consultblock').each(function() {
+                putDeleteButton($(this),collectionCounter);
+                collectionCounter++
+            });
+
+            
+            if(counter)
+                for(let i=0; i < counter-1; i++)
+                    hideBlock(i)
+                    
+            let $addButton = $("#add")
+            $addButton.on("click", (event) => {
+        
+                event.preventDefault()
+                let $newConsultBlock = $("#consultation").data("prototype")
+                let counter = document.getElementsByClassName("consultblock").length
+              
+                idPatient = window.location.href.split("/")
+                if(isNaN(idPatient[5]))
+                {
+                    idPatient = idPatient[5].split("#");
+                    idPatient = idPatient[0]
+                }
+                else
+                    idPatient = idPatient[5]
+
+
+                $newConsultBlock = $($newConsultBlock.replace(/__name__/g, counter))
+                $("#consultation").append(
+                    $($("#consultation").data("widget-tags")).html($newConsultBlock)
+                )
+                $("#consultation").append($addButton)
+            
+                $collectionForms = $('#consultation');
+                putDeleteButton($collectionForms.find('.consultblock').last(),counter);
+
+                //On force le bon patient dans le selecteur d'objet patient du formulaire
+                var option = document.getElementById("patient_consultations_"+counter+"_patient").options;
+                [].forEach.call(option,function(opt){
+                    if(opt.value == idPatient)
+                        opt.selected = true
+                });
+                
+                //On cache le block precedent pour qu'il n'y ai qu'un block présent
+                var blockcounter = counter -1
+                hideBlock(blockcounter)
+               
+                
+                
+            })
+
+        })
+
+     
+     </script>
+{% endblock %}

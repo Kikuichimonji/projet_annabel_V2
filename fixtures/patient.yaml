@@ -1,0 +1,12 @@
+App\Entity\Patient:
+  patient_{1..20}:
+    nom: <lastName()>
+    prenom : <firstNameMale()>
+    date_naissance : <dateTimeThisCentury()>
+    cabinet : '<numberBetween(1,2)>x @cabinet_*'
+    num_fixe : <phoneNumber()>
+    adresse : <streetAddress()>
+    code_postal : <postcode()>
+    ville : <city()>
+
+
