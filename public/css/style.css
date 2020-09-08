@@ -13,11 +13,20 @@ span.uk-form-icon{
 .hidden,#patient_cabinet{
   visibility: hidden;
 }
-td a
+#error
 {
-  
+  color: red;
+  font-weight: bold;
+  margin-left: 1em;
 }
-
+.uk-active
+{
+  font-weight: bold;
+}
+.consultblock
+{
+  border: 1px lightgray solid;
+}
 
 
 

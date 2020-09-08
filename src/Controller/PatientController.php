@@ -15,7 +15,7 @@ class PatientController extends AbstractController
      * @Route("/patient/{idc}", name="patient_add", defaults={"_fragment" = "consultation"})
      * @Route("/patient/{idc}/{id}", name="patient_edit", defaults={"_fragment" = "consultation"})
      */
-    public function addPatient(Patient $patient = null,Request $request)
+    public function addPatient(Patient $patient = null,Request $request,$idc = null)
     {
         if(!$patient)
             $patient = new Patient();
@@ -38,7 +38,7 @@ class PatientController extends AbstractController
 
             return $this->redirectToRoute("patient_edit",[
                 "id" => $patient->getId(),
-                "idc" => 1,
+                "idc" => $idc,
                 ]);
         }
 

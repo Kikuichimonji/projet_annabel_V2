@@ -109,6 +109,12 @@
             })
         }
 
+        function showClick(event)
+        {
+            event.preventDefault()
+            showBlock(showButton.myParam1,showButton.myParam2,showButton.myParam3)
+        }
+
         function hideBlock(id)
         {
             var block = document.getElementById("patient_consultations_"+id)
@@ -120,10 +126,25 @@
             show.append(showButton)
             show.append(document.getElementById("patient_consultations_"+id+"_date_consult").value)
 
+            showButton.addEventListener("click",showClick);
+            showButton.myParam1 = id
+            showButton.myParam2 = showButton
+            showButton.myParam3 = block         
+            
+        }
+
+        function showBlock(id,button,block)
+        {
+            var block = document.getElementById("patient_consultations_"+id);
+            block.style.display = "initial";
+            button.innerHTML = "Cacher";
+            showButton.removeEventListener("click");
             showButton.addEventListener("click",function(event){
                 event.preventDefault()
+                alert(1)
+                block.style.display = "none"
             });
-            
+
         }
 
         $(document).ready(function()
@@ -131,7 +152,13 @@
             // Block permetant de modifier le selecteur d'id cabinet, pour la relation patient/cabinet
             let collectionCounter = 0
             var idCabinet = window.location.href.split("/");
-            idCabinet = idCabinet[4]
+            if(isNaN(idCabinet[4]))
+            {
+                idCabinet = idCabinet[4].split("#");
+                idCabinet = idCabinet[0]
+            }
+            else
+                idCabinet = idCabinet[4]
             let pc = document.getElementById("patient_cabinet");
             let counter = document.getElementsByClassName("consultblock").length;
 
