@@ -27,10 +27,11 @@
 {% endblock %}
 {% block body %}
     <a href="{{path('patient_add',{'idc':nav})}}"><span uk-icon="icon: plus-circle; ratio: 1.5"></span> Ajouter un nouveau patient</a>
-    <h2 class="uk-heading-line uk-text-center"><span>Liste des patients ({{patients | length}})</span></h2>
+    <h2 class="uk-heading-line uk-text-center"><span>Liste des patients ({{patients.getTotalItemCount}})</span></h2>
     {{ form_start(form) }}
         <!--<button type="submit">filtrer</button>-->
     {{ form_end(form) }}
+    {% set link = '<a href="{{path(\'patient_edit\',{\'idc\':app.request.attributes.get("_route_params").id,\'id\':patient.id})}}">' %}
     <table class="uk-table-striped uk-table-hover uk-table-small uk-table">
         <thead>
             <tr>
@@ -43,8 +44,8 @@
         </thead>
         <tbody>
             {% for patient in patients %}
-            <tr>
-                <td><a href="{{path('patient_edit',{'idc':app.request.attributes.get("_route_params").id,'id':patient.id})}}">{{patient.nom}}</a></td>
+            <tr class="trClic" id="{{patient.id}}">
+                <td><a class="aClic{{patient.id}}" onclick="return killLink()" href="{{path('patient_edit',{'idc':app.request.attributes.get("_route_params").id,'id':patient.id})}}">{{patient.nom}}</a></td>
                 <td>{{patient.prenom}}</td>
                 <td>{{patient.numFixe}}</td>
                 <td>{{patient.adresse ~" "~ patient.codePostal ~" "~ patient.ville}}</td>
@@ -53,7 +54,24 @@
             {% endfor %}
         </tbody>
     </table>
+   
     <div class="bootstrap">
         {{ knp_pagination_render(patients) }}
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function killLink(){
+            return false;
+        }
+        var tr = document.getElementsByClassName("trClic") ;
+        [].forEach.call(tr,function(opt){
+            opt.addEventListener('click', function (event) {
+            window.location.href = document.querySelector('.aClic'+opt.id);
+            });
+        });
+       
+    </script>
+
 {% endblock %}

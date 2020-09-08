@@ -68,61 +68,61 @@ class PatientRepository extends ServiceEntityRepository
 
     public function getBySearch(SearchData $data)
     {
-        if(count($data->cabinets) > 1)
-        {
-            $rsm = new ResultSetMapping();
-            $rsm->addEntityResult('App\Entity\Patient','p');
-            $rsm->addFieldResult('p', 'id', 'id');
-            $rsm->addFieldResult('p', 'nom', 'nom');
-            $rsm->addFieldResult('p', 'prenom', 'prenom');
-            $rsm->addFieldResult('p', 'num_fixe', 'numFixe');
-            $rsm->addFieldResult('p', 'num_portable', 'numPortable');
-            $rsm->addFieldResult('p', 'adresse', 'adresse');
-            $rsm->addFieldResult('p', 'code_postal', 'codePostal');
-            $rsm->addFieldResult('p', 'ville', 'ville');
+        // if(count($data->cabinets) > 100)
+        // {
+        //     $rsm = new ResultSetMapping();
+        //     $rsm->addEntityResult('App\Entity\Patient','p');
+        //     $rsm->addFieldResult('p', 'id', 'id');
+        //     $rsm->addFieldResult('p', 'nom', 'nom');
+        //     $rsm->addFieldResult('p', 'prenom', 'prenom');
+        //     $rsm->addFieldResult('p', 'num_fixe', 'numFixe');
+        //     $rsm->addFieldResult('p', 'num_portable', 'numPortable');
+        //     $rsm->addFieldResult('p', 'adresse', 'adresse');
+        //     $rsm->addFieldResult('p', 'code_postal', 'codePostal');
+        //     $rsm->addFieldResult('p', 'ville', 'ville');
 
-            $q ="SELECT p.id, p.nom, p.prenom, p.num_fixe, p.num_portable, p.adresse, p.code_postal, p.ville
-                FROM patient p
-                INNER JOIN patient_cabinet pc ON p.id = pc.patient_id
-                WHERE p.nom LIKE :q
-                OR p.prenom LIKE :q
-                OR p.num_fixe LIKE :q
-                OR p.num_portable LIKE :q
-                OR p.code_postal LIKE :q
-                OR p.adresse LIKE :q
-                OR p.ville LIKE :q
-                GROUP BY p.id";
+        //     $q ="SELECT p.id, p.nom, p.prenom, p.num_fixe, p.num_portable, p.adresse, p.code_postal, p.ville
+        //         FROM patient p
+        //         INNER JOIN patient_cabinet pc ON p.id = pc.patient_id
+        //         WHERE p.nom LIKE :q
+        //         OR p.prenom LIKE :q
+        //         OR p.num_fixe LIKE :q
+        //         OR p.num_portable LIKE :q
+        //         OR p.code_postal LIKE :q
+        //         OR p.adresse LIKE :q
+        //         OR p.ville LIKE :q
+        //         GROUP BY p.id";
 
-            $counter = 1;
+        //     $counter = 1;
 
-            foreach($data->cabinets as $cabinet)
-            {
-                $id = $cabinet->getId();
-                if($counter == 1)
-                    $q= $q." HAVING GROUP_CONCAT(pc.cabinet_id) LIKE :id$id";
-                else
-                    $q= $q." AND GROUP_CONCAT(pc.cabinet_id) LIKE :id$id";
-                $counter++;
-            }
+        //     foreach($data->cabinets as $cabinet)
+        //     {
+        //         $id = $cabinet->getId();
+        //         if($counter == 1)
+        //             $q= $q." HAVING GROUP_CONCAT(pc.cabinet_id) LIKE :id$id";
+        //         else
+        //             $q= $q." AND GROUP_CONCAT(pc.cabinet_id) LIKE :id$id";
+        //         $counter++;
+        //     }
 
-            $em = $this->getEntityManager();
-            $query = $em->createNativeQuery($q,$rsm);
-            foreach($data->cabinets as $cabinet)
-            {
-                $id = $cabinet->getId();
-                $query->setParameter("id$id", "%{$id}%");
-            }
+        //     $em = $this->getEntityManager();
+        //     $query = $em->createNativeQuery($q,$rsm);
+        //     foreach($data->cabinets as $cabinet)
+        //     {
+        //         $id = $cabinet->getId();
+        //         $query->setParameter("id$id", "%{$id}%");
+        //     }
 
-            $query->setParameter("q", "%{$data->q}%");
-            //return $query->getResult();
-            return $this->paginator->paginate(
-                $query->getResult(),
-                $data->page,
-                50
-         );
-        }
-        else
-       {
+        //     $query->setParameter("q", "%{$data->q}%");
+        //     //return $query->getResult();
+        //     return $this->paginator->paginate(
+        //         $query->getResult(),
+        //         $data->page,
+        //         50
+        //  );
+        //}
+        //else
+       //{
             $query = $this->createQueryBuilder("p")
             ->select("c","p")
             ->join("p.cabinet","c");
@@ -143,9 +143,21 @@ class PatientRepository extends ServiceEntityRepository
             if(!empty($data->cabinets))
             {           
                 $id = $data->cabinets[0]->getId();
+                $q = "";
+                $nbcabinet = count($data->cabinets);
+                $i=0;
+                foreach($data->cabinets as $cabinet)
+                {
+                    $id = $cabinet->getId();
+                    if(++$i === $nbcabinet)
+                        $q= $q."c.id = :id$id";
+                    else
+                        $q= $q."c.id = :id$id or "; 
+                    $query = $query->setParameter("id$id", $id);
+                }
                 $query = $query
-                    ->andWhere("c.id = :id$id")
-                    ->setParameter("id$id", $id);
+                    ->andWhere($q);
+                
             }
 
              $query = $query->getQuery();
@@ -156,7 +168,7 @@ class PatientRepository extends ServiceEntityRepository
                     $data->page,
                     10
              );
-       }
+      // }
         
     }
 
