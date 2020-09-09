@@ -53,6 +53,7 @@
         </thead>
         <tbody>
             {% for patient in patients %}
+            
             <tr class="trClic" id="{{patient.id}}">
                 <td><a id="aClic{{patient.id}}" onclick="return checkCabinet()" href="{{path('patient_edit',{'idc':app.request.attributes.get("_route_params").id,'id':patient.id})}}">{{patient.nom}}</a></td>
                 <td>{{patient.prenom}}</td>
@@ -60,7 +61,7 @@
                         {{patient.numFixe}}
                     {% endif %}</td>
                 <td>{{patient.adresse ~" "~ patient.codePostal ~" "~ patient.ville}}</td>
-                <td>{{patient.LastConsult}}</td>
+                <td>{{patient.GetLastConsultationDate|date("d/m/Y")}}</td>
                 {% if is_granted('ROLE_ADMIN') %}
                     <td id="tdDelete">
                         <a class="admin" href="{{path('patient_delete_cabinet',{'idc':app.request.attributes.get('_route_params').id,'id':patient.id})}}"><span uk-icon="trash"></span></a>

@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\PatientRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PatientRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=PatientRepository::class)
@@ -187,6 +188,7 @@ class Patient
         $this->files = new ArrayCollection();
         $this->consultations = new ArrayCollection();
         $this->cabinet = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -337,12 +339,12 @@ class Patient
 
         return $this;
     }
-    public function getLastConsult(): ?string
+    public function getLastConsult(): ?\DateTimeInterface
     {
         return $this->lastConsult;
     }
 
-    public function setLastConsult($lastConsult): self
+    public function setLastConsult(\DateTimeInterface $lastConsult): self
     {
         $this->lastConsult = $lastConsult;
 
@@ -640,6 +642,18 @@ class Patient
         $this->antPriseMedic = $antPriseMedic;
 
         return $this;
+    }
+
+    public function GetLastConsultationDate()
+    {
+        $lastConsult = $this->getConsultations();
+        //dd(end($lastConsult));
+        if($lastConsult[0])
+            $lastConsultDate = $lastConsult[count($lastConsult)-1]->getDateConsult();
+        else 
+            $lastConsultDate = null;
+
+        return $lastConsultDate;
     }
 
 

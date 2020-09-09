@@ -21,7 +21,8 @@ class PatientController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         if(!$patient)
             $patient = new Patient();
-    
+        //dd($patient->getConsultations());
+        
         $entityManager = $this->getDoctrine()->getManager();
         $form = $this->createForm(PatientType::class,$patient);
         $form->handleRequest($request);
@@ -34,11 +35,7 @@ class PatientController extends AbstractController
         if($form->isSubmitted() && $form->isValid())
         {
             $patient = $form->getData();
-            $lastConsult = $patient->getConsultations();
-            $lastConsultDate = $lastConsult[count($lastConsult)-1]->getDateConsult();
-            if($lastConsultDate)
-                $patient->setLastConsult($lastConsultDate);
-            dd($patient);
+            //dd($patient->getConsultations());
             $entityManager->persist($patient,$cabinets);
             $entityManager->flush();
 

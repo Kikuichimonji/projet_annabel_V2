@@ -7,9 +7,11 @@
     <div >
         <a class="uk-navbar-center" href="{{path("home_detail",{"id":0})}}"><h1>Accueil<h1></a>
     </div>
-    <div class="uk-navbar-right">
-        Connecté en tant que : <strong> {{app.user.username}}</strong> <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
-    </div>
+    {% if app.user %}
+        <div class="uk-navbar-right">
+            Connecté en tant que : <strong> {{app.user.username}}</strong> <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
+        </div>
+    {% endif %}
 </nav>
 {% endblock %}
 
