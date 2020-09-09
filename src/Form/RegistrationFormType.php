@@ -8,8 +8,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+
 
 class RegistrationFormType extends AbstractType
 {
@@ -33,6 +35,18 @@ class RegistrationFormType extends AbstractType
                         'message' => 'Veuillez entrer un mot de passe',
                     ]),
                 ],
+            ])
+            ->add('roles', ChoiceType::class, [
+                "attr" => [
+                    "class" => "uk-select",
+                ],
+                "label" => "Roles",
+                'choices' => [
+                    'ADMIN' => 'ROLE_ADMIN',
+                    'REMPLACANT' => 'ROLE_USER',
+                ],
+                "multiple" => true,
+                "expanded" => true
             ])
             ->add('submit', SubmitType::class, [
                 "label" => "Ajouter"

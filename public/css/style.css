@@ -9,9 +9,21 @@ h1,h2,h3,h4,h5,h6{
 span.uk-form-icon{
   z-index: 10;
 }
-
+.username{
+  font-weight: bold;
+}
+.admin{
+  color: red;
+}
+#tdDelete
+{
+  text-align:center;
+}
 .hidden,#patient_cabinet{
   visibility: hidden;
+}
+.deleted{
+  display:none;
 }
 #error
 {

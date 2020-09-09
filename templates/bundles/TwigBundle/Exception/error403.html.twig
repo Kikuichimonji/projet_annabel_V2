@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+{% block title %}Erreur 403{% endblock %}
+
+{% block nav %}
+<nav class="uk-navbar-container" uk-navbar>
+    
+    <div >
+        <a class="uk-navbar-center" href="{{path("home_detail",{"id":0})}}"><h1>Accueil<h1></a>
+    </div>
+    <div class="uk-navbar-right">
+        Connecté en tant que : <strong>{{app.user.username}}</strong> <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
+    </div>
+</nav>
+{% endblock %}
+{% block body %}
+    <div >
+        <h1>Vous n'avez pas les droits<h1>
+    </div>
+{% endblock %}

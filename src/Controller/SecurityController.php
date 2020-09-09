@@ -56,6 +56,7 @@ class SecurityController extends AbstractController
                     $form->get("password")->getData()
                 )
             );
+            $user->setRoles( $form->get("roles")->getData());
         
 
             $entityManager = $this->getDoctrine()->getManager();

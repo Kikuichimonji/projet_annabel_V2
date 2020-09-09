@@ -1,11 +1,31 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Ajout d'un utilisateur{% endblock %}
+{% block nav %}
+
+<nav class="uk-navbar-container" uk-navbar>
+    <div >
+        <a class="uk-navbar-center" href="{{path("home_detail",{"id":0})}}"><h1>Accueil<h1></a>
+    </div>
+    <div class="uk-navbar-right">
+        Connecté en tant que : <strong> {{app.user.username}}</strong> <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
+    </div>
+</nav>
+{% endblock %}
 
 {% block body %}
     <h1>Ajout d'un nouvel utilisateur</h1>
 
-     {{ form(form) }}
+
+    {{form_start(form)}}
+    {{ form_row(form.username) }}
+    {{ form_row(form.password) }}
+    {% if not is_granted('ROLE_ADMIN') %}
+    <span class="deleted">
+        {{ form_row(form.roles) }}
+    </span>
+    {% endif %}
+    {{ form_end(form) }}
 
   
 {% endblock %}

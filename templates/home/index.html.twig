@@ -19,9 +19,15 @@
     <div >
         <a class="uk-navbar-center" href="{{path("home_detail",{"id":0})}}"><h1>Accueil<h1></a>
     </div>
-    
+    {% set class= "" %}
+    {% if is_granted('ROLE_ADMIN') %}
+        {% set class= "admin" %}
+    {% endif %}
     <div class="uk-navbar-right">
-        Connecté en tant que : <strong>{{app.user.username}}</strong> <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
+        Connecté en tant que : {% if is_granted('ROLE_ADMIN') %}
+            <a class="admin" href="{{path("add_user")}}"><span uk-icon="pencil"></span></a>
+        {% endif %}<span class="username {{class}}"> {{app.user.username}}</span>
+         <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
     </div>
 </nav>
 {% endblock %}
@@ -40,6 +46,9 @@
                 <th>Telephone</th>
                 <th>Adresse</th>
                 <th>Date de dernière consultation</th>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <th>Suppression</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -47,9 +56,17 @@
             <tr class="trClic" id="{{patient.id}}">
                 <td><a id="aClic{{patient.id}}" onclick="return checkCabinet()" href="{{path('patient_edit',{'idc':app.request.attributes.get("_route_params").id,'id':patient.id})}}">{{patient.nom}}</a></td>
                 <td>{{patient.prenom}}</td>
-                <td>{{patient.numFixe}}</td>
+                <td>{% if is_granted('ROLE_ADMIN') %}
+                        {{patient.numFixe}}
+                    {% endif %}</td>
                 <td>{{patient.adresse ~" "~ patient.codePostal ~" "~ patient.ville}}</td>
-                <td>{{patient.lastConsult}}</td>
+                <td>{{patient.LastConsult}}</td>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <td id="tdDelete">
+                        <a class="admin" href="{{path('patient_delete_cabinet',{'idc':app.request.attributes.get('_route_params').id,'id':patient.id})}}"><span uk-icon="trash"></span></a>
+                        <a class="admin" href="{{path('patient_delete_full',{'id':patient.id})}}"><span uk-icon="warning"></span></a>
+                    </td>
+                {% endif %}
             </tr>
             {% endfor %}
         </tbody>

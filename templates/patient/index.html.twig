@@ -109,12 +109,25 @@
             })
         }
 
-        function showClick(event)
+        function showBlock(event)
         {
+            let but = event.currentTarget
             event.preventDefault()
-            showBlock(showButton.myParam1,showButton.myParam2,showButton.myParam3)
-        }
+            but.block.style.display = "initial";
+            but.button.innerHTML = "Cacher";
+            but.removeEventListener("click",showBlock);
+            but.addEventListener("click",hideBlockAlt);
 
+        }
+        function hideBlockAlt(event)
+        {
+            event.preventDefault();
+            let but = event.currentTarget;
+            but.block.style.display = "none"
+            but.innerHTML = "Détails";
+            but.removeEventListener("click",hideBlockAlt);
+            but.addEventListener("click",showBlock);
+        }
         function hideBlock(id)
         {
             var block = document.getElementById("patient_consultations_"+id)
@@ -126,25 +139,11 @@
             show.append(showButton)
             show.append(document.getElementById("patient_consultations_"+id+"_date_consult").value)
 
-            showButton.addEventListener("click",showClick);
-            showButton.myParam1 = id
-            showButton.myParam2 = showButton
-            showButton.myParam3 = block         
+            showButton.addEventListener("click",showBlock);
+            showButton.id = id
+            showButton.button = showButton
+            showButton.block = block         
             
-        }
-
-        function showBlock(id,button,block)
-        {
-            var block = document.getElementById("patient_consultations_"+id);
-            block.style.display = "initial";
-            button.innerHTML = "Cacher";
-            showButton.removeEventListener("click");
-            showButton.addEventListener("click",function(event){
-                event.preventDefault()
-                alert(1)
-                block.style.display = "none"
-            });
-
         }
 
         $(document).ready(function()

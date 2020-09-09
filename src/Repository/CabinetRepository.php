@@ -31,6 +31,19 @@ class CabinetRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    public function GetOneById($id)
+    {
+        $entityManager= $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            "SELECT c 
+             FROM App\Entity\Cabinet c
+             WHERE c.id = :id"
+        );
+        $query->setParameter('id',$id);
+        
+        return $query->GetResult();
+    }
+
 
     // /**
     //  * @return Cabinet[] Returns an array of Cabinet objects

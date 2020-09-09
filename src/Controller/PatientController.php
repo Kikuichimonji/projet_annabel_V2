@@ -7,6 +7,7 @@ use App\Entity\Patient;
 use App\Form\PatientType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PatientController extends AbstractController
@@ -17,6 +18,7 @@ class PatientController extends AbstractController
      */
     public function addPatient(Patient $patient = null,Request $request,$idc = null)
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         if(!$patient)
             $patient = new Patient();
     
@@ -32,7 +34,11 @@ class PatientController extends AbstractController
         if($form->isSubmitted() && $form->isValid())
         {
             $patient = $form->getData();
-            
+            $lastConsult = $patient->getConsultations();
+            $lastConsultDate = $lastConsult[count($lastConsult)-1]->getDateConsult();
+            if($lastConsultDate)
+                $patient->setLastConsult($lastConsultDate);
+            dd($patient);
             $entityManager->persist($patient,$cabinets);
             $entityManager->flush();
 
@@ -47,5 +53,35 @@ class PatientController extends AbstractController
             "patient" => $patient,
             "cabinets" => $cabinets,
             ]);
+    }
+
+     /**
+     * @Route("/DeletePatient/{id}", name="patient_delete_full")
+     * @Route("/DeletePatient/{idc}/{id}", name="patient_delete_cabinet")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function deletePatient(Patient $patient,$idc = 0 )
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $entityManager = $this->getDoctrine()->getManager();
+        if(!$idc)
+        {
+            $this->getDoctrine()
+            ->getRepository(Patient::class)
+            ->deletePatientById($entityManager,$patient->getId());
+        }
+        else
+        {
+            $cabinet = $this->getDoctrine()
+            ->getRepository(Cabinet::class)
+            ->getOneById($idc);
+            $cabinet[0]->removePatient($patient);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute("home_detail",[
+            "id" => $idc,
+        ]);
+        
+        
     }
 }

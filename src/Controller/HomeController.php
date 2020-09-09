@@ -18,6 +18,7 @@ class HomeController extends AbstractController
      */
     public function index(Cabinet $cabinet = null,Request $request)
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $data = new SearchData();
         $data->page = $request->get('page', 1);
