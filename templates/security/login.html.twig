@@ -13,7 +13,7 @@
         </div>
     {% endif %}
 
-    <h2 class="uk-text-center">Connection</h2>
+    <h2 class="uk-text-center">Connexion</h2>
 
     {% if error %}
         <div class="uk-alert uk-text-danger uk-text-center">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -37,6 +37,9 @@
             <input type="password" name="password" id="inputPassword" class="uk-input uk-form-width-large" required>
         </div>
     </div>
+    foreach
+
+
     <input type="hidden" name="_csrf_token"
            value="{{ csrf_token('authenticate') }}">
 

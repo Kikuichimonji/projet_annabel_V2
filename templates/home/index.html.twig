@@ -15,6 +15,8 @@
             </li>
         {% endfor %}
         </ul>
+        {% set error = app.request.query.get("err")%}
+    <span id="error">{% if error == 1 %}Ce cabinet n'existe pas{% endif %}</span>
     </div>
     <div >
         <a class="uk-navbar-center" href="{{path("home_detail",{"id":0})}}"><h1>Accueil<h1></a>
@@ -33,8 +35,6 @@
 {% endblock %}
 {% block body %}
     <a onclick="return checkCabinet()" href="{{path('patient_add',{'idc':nav})}}"><span uk-icon="icon: plus-circle; ratio: 1.5"></span> Ajouter un nouveau patient</a>
-    {% set error = app.request.query.get("err")%}
-    <span id="error">{% if error == 1 %}Ce cabinet n'existe pas{% endif %}</span>
     <h2 class="uk-heading-line uk-text-center"><span>Liste des patients ({{patients.getTotalItemCount}})</span></h2>
     {{ form_start(form) }}
         <!--<button type="submit">filtrer</button>-->

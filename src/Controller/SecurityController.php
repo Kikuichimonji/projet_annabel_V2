@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Cabinet;
 use App\Entity\Utilisateur;
 use App\Form\RegistrationFormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +28,16 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        $cabinet = $this->getDoctrine()
+            ->getRepository(Cabinet::class)
+            ->getAll();
+
+
+        return $this->render('security/login.html.twig', [
+            'last_username' => $lastUsername,
+             'error' => $error,
+             "cabinets" => $cabinet
+             ]);
     }
 
     /**
