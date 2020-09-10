@@ -19,6 +19,17 @@ class UtilisateurRepository extends ServiceEntityRepository
         parent::__construct($registry, Utilisateur::class);
     }
 
+    public function getAll()
+    {
+        $entityManager= $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            "SELECT u
+             FROM App\Entity\Utilisateur u
+             ORDER BY u.id"
+        );
+        return  $query->execute();
+    }
+
     // /**
     //  * @return Utilisateur[] Returns an array of Utilisateur objects
     //  */

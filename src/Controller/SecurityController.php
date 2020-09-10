@@ -44,8 +44,11 @@ class SecurityController extends AbstractController
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $user = new Utilisateur();
-
+        
         $form = $this->createForm(RegistrationFormType::class, $user);
+        if(!$this->isGranted('ROLE_ADMIN'))
+            $form->remove("roles");
+
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())

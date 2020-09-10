@@ -19,15 +19,8 @@
     <h1>Ajout d'un nouvel utilisateur</h1>
 
 
-    {{form_start(form)}}
-    {{ form_row(form.username) }}
-    {{ form_row(form.password) }}
-    {% if not is_granted('ROLE_ADMIN') %}
-    <span class="deleted">
-        {{ form_row(form.roles) }}
-    </span>
-    {% endif %}
-    {{ form_end(form) }}
+    {{form(form)}}
+    
 
   
 {% endblock %}

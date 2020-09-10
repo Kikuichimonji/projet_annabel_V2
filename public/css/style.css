@@ -25,6 +25,11 @@ span.uk-form-icon{
 .deleted{
   display:none;
 }
+.dimTD
+{
+  color: lightgray;
+  font-weight: bold;
+}
 #error
 {
   color: red;

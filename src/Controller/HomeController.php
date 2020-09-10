@@ -13,7 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/accueil", name="home")
      * @Route("/accueil/{id}", name="home_detail")
      */
     public function index(Cabinet $cabinet = null,Request $request)
@@ -24,7 +23,6 @@ class HomeController extends AbstractController
         $data->page = $request->get('page', 1);
         $form = $this->createForm(SearchType::class, $data);
         $form->handleRequest($request);
-        
 
         if($form->isSubmitted() && $form->isValid())
         {
@@ -57,5 +55,16 @@ class HomeController extends AbstractController
             "nav" => $nav,
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/accueil", name="home")
+     */
+    public function redirectAccueil()
+    {
+        return $this->redirectToRoute("home_detail",[
+            "id" => 0,
+            ]);
+        
     }
 }

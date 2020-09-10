@@ -21,14 +21,28 @@ class PatientController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         if(!$patient)
             $patient = new Patient();
-        //dd($patient->getConsultations());
         
+        $cabinets = $this->getDoctrine()
+            ->getRepository(Cabinet::class)
+            ->getAll(); 
+
+        $isIn = 0;
+        if(is_numeric($idc))   
+            foreach($cabinets as $c)
+                if($c->getId() == $idc)
+                    $isIn = 1;
+
+        if(!$isIn)
+            return $this->redirectToRoute("home_detail",[
+                "id" => $idc,
+                "err" => 1,
+                ]);
+                 
+         
         $entityManager = $this->getDoctrine()->getManager();
         $form = $this->createForm(PatientType::class,$patient);
         $form->handleRequest($request);
-        $cabinets = $this->getDoctrine()
-                ->getRepository(Cabinet::class)
-                ->getAll();
+       
 
 
 

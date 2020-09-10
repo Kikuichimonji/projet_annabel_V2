@@ -100,8 +100,6 @@ class Patient
      */
     private $cabinet;
 
-    private $lastConsult;
-
     /**
      * @ORM\Column(type="text", nullable=true)
      */
@@ -644,16 +642,9 @@ class Patient
         return $this;
     }
 
-    public function GetLastConsultationDate()
+    public function getLastConsultationDate()
     {
-        $lastConsult = $this->getConsultations();
-        //dd(end($lastConsult));
-        if($lastConsult[0])
-            $lastConsultDate = $lastConsult[count($lastConsult)-1]->getDateConsult();
-        else 
-            $lastConsultDate = null;
-
-        return $lastConsultDate;
+        return $this->getConsultations()->last();
     }
 
 
