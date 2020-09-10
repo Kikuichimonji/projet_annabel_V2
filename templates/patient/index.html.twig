@@ -67,7 +67,7 @@
     </div>
     <span></span>
     <h2>Consultations</h2>
-    <div id="consultation"
+    <div id="consultation" data-patient="{{ patient.id }}"
         data-prototype="{{ form_widget(form.consultations.vars.prototype)|e }}"
         data-widget-tags="{{ '<div class="consultblock"></div>'|e }}"
         data-widget-counter="{{ form.consultations|length }}">
@@ -161,7 +161,7 @@
             let pc = document.getElementById("patient_cabinet");
             let counter = document.getElementsByClassName("consultblock").length;
 
-            [].forEach.call(pc.options,function(opt){
+            Array.prototype.forEach.call(pc.options,function(opt){
                 if(opt.value == idCabinet)
                     opt.selected = true
             });
@@ -181,19 +181,11 @@
             $addButton.on("click", (event) => {
         
                 event.preventDefault()
-                let $newConsultBlock = $("#consultation").data("prototype")
+                let $newConsultBlock = $("#consultation").data("prototype")//-------------------------------JQUERY ALERT
                 let counter = document.getElementsByClassName("consultblock").length
               
-                idPatient = window.location.href.split("/")
-                if(isNaN(idPatient[5]))
-                {
-                    idPatient = idPatient[5].split("#");
-                    idPatient = idPatient[0]
-                }
-                else
-                    idPatient = idPatient[5]
-
-
+                idPatient = $("#consultation").data("patient")//-------------------------------JQUERY ALERT
+                
                 $newConsultBlock = $($newConsultBlock.replace(/__name__/g, counter))
                 $("#consultation").append(
                     $($("#consultation").data("widget-tags")).html($newConsultBlock)

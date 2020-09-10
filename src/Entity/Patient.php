@@ -86,7 +86,7 @@ class Patient
     private $files;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime")
      */
     private $dateCreation;
 
@@ -186,7 +186,7 @@ class Patient
         $this->files = new ArrayCollection();
         $this->consultations = new ArrayCollection();
         $this->cabinet = new ArrayCollection();
-
+        $this->dateCreation = new \DateTime();
     }
 
     public function getId(): ?int
@@ -645,6 +645,13 @@ class Patient
     public function getLastConsultationDate()
     {
         return $this->getConsultations()->last();
+    }
+
+    public function setAntFamille(?string $antFamille): self
+    {
+        $this->antFamille = $antFamille;
+
+        return $this;
     }
 
 

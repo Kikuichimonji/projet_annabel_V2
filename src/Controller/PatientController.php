@@ -63,7 +63,7 @@ class PatientController extends AbstractController
             "form" => $form->createView(),
             "patient" => $patient,
             "cabinets" => $cabinets,
-            ]);
+        ]);
     }
 
      /**
