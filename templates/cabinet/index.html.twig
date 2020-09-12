@@ -1,20 +1,43 @@
 {% extends 'base.html.twig' %}
+{% block title %}Liste Cabinet{% endblock %}
+{% block nav %}
 
-{% block title %}Hello CabinetController!{% endblock %}
-
+<nav class="uk-navbar-container" uk-navbar>
+    <div >
+        <a class="uk-navbar-center" href="{{path("home_detail",{"id":0})}}"><h1>Accueil<h1></a>
+    </div>
+    {% set class= "" %}
+    {% if is_granted('ROLE_ADMIN') %}
+        {% set class= "admin" %}
+    {% endif %}
+    <div class="uk-navbar-right">
+        Connecté en tant que : {% if is_granted('ROLE_ADMIN') %}
+            <a class="admin" href="{{path("admin_utilisateur")}}"><span uk-icon="pencil"></span></a>
+        {% endif %}<span class="username {{class}}"> {{app.user.username}}</span>
+         <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
+    </div>
+</nav>
+{% endblock %}
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+  <a href="{{path('admin_add_cabinet')}}"><span uk-icon="icon: plus-circle; ratio: 1.5"></span> Ajouter un nouveau cabinet</a>
+<table class="uk-table-striped uk-table-hover uk-table-small uk-table">
+        <thead>
+            <tr>
+                <th>Nom du cabinet</th>
+                <th>Modifier</th>
+                <th>Supprimer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cabinet in cabinets %}
+            
+            <tr>
+                <td>{{cabinet.libelle}}</td>
+                <td><a class="admin" href="{{path('admin_edit_cabinet',{'id':cabinet.id})}}"><span uk-icon="pencil"></span></a></td>
+                <td><a class="admin" href="{{path('admin_delete_cabinet',{'id':cabinet.id})}}"><span uk-icon="trash"></span></a></td>
+            </tr>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/laragon/www/projet_annabel/src/Controller/CabinetController.php'|file_link(0) }}">src/Controller/CabinetController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/laragon/www/projet_annabel/templates/cabinet/index.html.twig'|file_link(0) }}">templates/cabinet/index.html.twig</a></code></li>
-    </ul>
-</div>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

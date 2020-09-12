@@ -6,7 +6,7 @@
     <div class="uk-navbar-left">
         <ul class="uk-navbar-nav">
         {% for cabinet in cabinets %}
-            {% if cabinet.id == nav %}
+            {% if cabinet.id == app.session.get("cabinet").getId() %}
                 <li class="uk-active">
             {% else %}
                 <li>
@@ -15,11 +15,12 @@
             </li>
         {% endfor %}
         </ul>
+        <a class="admin" href="{{path("admin_cabinet")}}"><span uk-icon="pencil"></span></a>
         {% set error = app.request.query.get("err")%}
     <span id="error">{% if error == 1 %}Ce cabinet n'existe pas{% endif %}</span>
     </div>
     <div >
-        <a class="uk-navbar-center" href="{{path("home_detail",{"id":0})}}"><h1>Accueil<h1></a>
+        <a class="uk-navbar-center" href="{{path("home_detail",{"id":app.session.get("cabinet").getId()})}}"><h1>Accueil<h1></a>
     </div>
     {% set class= "" %}
     {% if is_granted('ROLE_ADMIN') %}
@@ -34,12 +35,11 @@
 </nav>
 {% endblock %}
 {% block body %}
-    <a onclick="return checkCabinet()" href="{{path('patient_add',{'idc':nav})}}"><span uk-icon="icon: plus-circle; ratio: 1.5"></span> Ajouter un nouveau patient</a>
+    <a onclick="return checkCabinet()" href="{{path('patient_add',{'idc':app.session.get("cabinet").getId()})}}"><span uk-icon="icon: plus-circle; ratio: 1.5"></span> Ajouter un nouveau patient</a>
     <h2 class="uk-heading-line uk-text-center"><span>Liste des patients ({{patients.getTotalItemCount}})</span></h2>
     {{ form_start(form) }}
         <!--<button type="submit">filtrer</button>-->
     {{ form_end(form) }}
-    {% set link = '<a href="{{path(\'patient_edit\',{\'idc\':app.request.attributes.get("_route_params").id,\'id\':patient.id})}}">' %}
     <table class="uk-table-striped uk-table-hover uk-table-small uk-table">
         <thead>
             <tr>
@@ -57,7 +57,7 @@
             {% for patient in patients %}
             
             <tr class="trClic" id="{{patient.id}}">
-                <td><a id="aClic{{patient.id}}" onclick="return checkCabinet()" href="{{path('patient_edit',{'idc':app.request.attributes.get("_route_params").id,'id':patient.id})}}">{{patient.nom}}</a></td>
+                <td><a id="aClic{{patient.id}}" onclick="return checkCabinet()" href="{{path('patient_edit',{'idc':app.session.get("cabinet").getId(),'id':patient.id})}}">{{patient.nom}}</a></td>
                 <td>{{patient.prenom}}</td>
                 <td>{% if is_granted('ROLE_ADMIN') %}
                         {{patient.numFixe}}

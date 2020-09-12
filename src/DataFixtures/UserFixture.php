@@ -1,5 +1,5 @@
 <?php
-namespace App\DataFixtures;
+/*namespace App\DataFixtures;
 use App\Entity\User;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -36,4 +36,4 @@ class UserFixture extends BaseFixture
         });
         $manager->flush();
     }
-}
+}*/

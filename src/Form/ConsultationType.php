@@ -21,7 +21,8 @@ class ConsultationType extends AbstractType
         $builder
             ->add('date_consult',DateType::class,[
                 'widget' => 'single_text',
-                "label" => "Date de consultation"
+                "label" => "Date de consultation",
+                "attr" => ["class" => "uk-input"],
             ])
             ->add('test',TextareaType::class,[
                 "attr" => ["class" => "uk-textarea"],

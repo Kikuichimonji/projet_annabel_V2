@@ -31,13 +31,14 @@ class PatientType extends AbstractType
             ])
             ->add('dateNaissance',DateType::class,[
                 'widget' => 'single_text',
-                "label" => "Date de naissance"
+                "label" => "Date de naissance",
+                "attr" => ["class" => "uk-input"]
             ])
             ->add('adresse', TextType::class,[
                 "attr" => ["class" => "uk-input"]
             ])
             ->add('codePostal', TextType::class,[
-                "attr" => ["class" => "uk-input"]
+                "attr" => ["class" => "uk-input date"]
             ])
             ->add('ville', TextType::class,[
                 "attr" => ["class" => "uk-input"]

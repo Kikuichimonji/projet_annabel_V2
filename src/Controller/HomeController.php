@@ -13,12 +13,25 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class HomeController extends AbstractController
 {
     /**
+     * @Route("/accueil", name="home")
      * @Route("/accueil/{id}", name="home_detail")
      */
     public function index(Cabinet $cabinet = null,Request $request)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
+        $cabinets = $this->getDoctrine()
+            ->getRepository(Cabinet::class)
+            ->getAll();
+        
+        if(!$cabinet)
+        {
+            return $this->redirectToRoute("home_detail",[
+                "id" => $cabinets[0]->getId(),
+                "err" => 1
+                ]);
+        }
+        $session = $request->getSession();
+        $session->set("cabinet",$cabinet);
         $data = new SearchData();
         $data->page = $request->get('page', 1);
         $form = $this->createForm(SearchType::class, $data);
@@ -29,14 +42,9 @@ class HomeController extends AbstractController
             $patients = $this->getDoctrine()
                         ->getRepository(Patient::class)
                         ->getBySearch($data);
-            $nav = 1;
         }
         else
         {
-            if(!$cabinet)
-                $nav = 1;
-            else
-                $nav = $cabinet->getId();
 
             $patients = $this->getDoctrine()
             ->getRepository(Patient::class)
@@ -44,27 +52,12 @@ class HomeController extends AbstractController
         }
        
         
-            
-        $cabinets = $this->getDoctrine()
-                ->getRepository(Cabinet::class)
-                ->getAll();
 
         return $this->render('home/index.html.twig', [
             "patients" => $patients,
             "cabinets" => $cabinets,
-            "nav" => $nav,
             'form' => $form->createView()
         ]);
     }
 
-    /**
-     * @Route("/accueil", name="home")
-     */
-    public function redirectAccueil()
-    {
-        return $this->redirectToRoute("home_detail",[
-            "id" => 0,
-            ]);
-        
-    }
 }

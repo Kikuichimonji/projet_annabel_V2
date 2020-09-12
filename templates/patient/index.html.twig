@@ -2,17 +2,12 @@
 {% block title %}Fiche patient{% endblock %}
 
 {% block nav %}
-{% set idc = app.request.attributes.get("_route_params").idc %}
 <nav class="uk-navbar-container" uk-navbar>
     <div class="uk-navbar-left">
         <ul class="uk-navbar-nav">
            <li class="uk-active">
-                <a href="{{path('home_detail',{'id':idc})}}">Accueil - 
-                {% for cabinet in cabinets %}
-                    {% if cabinet.id == idc%}
-                        {{cabinet.libelle}}
-                    {% endif %}
-                {% endfor %}
+                <a href="{{path('home_detail',{'id':app.session.get("cabinet").getId()})}}">Accueil - 
+                    {{app.session.get("cabinet").getLibelle()}}
                 </a>
             </li>
         </ul>
@@ -28,43 +23,67 @@
 {% endblock %}
 
 {% block body %}
-{{form_start(form)}}
+<div id="mainWraps">
+    <span id="idCabinet" data-cabinet="{{ app.session.get("cabinet").getId() }}"></span>
+    {{form_start(form)}}
     <h2>Administratif</h2>
-    {{ form_row(form.nom) }}
-    {{ form_row(form.prenom) }}
-    {{ form_row(form.sexe) }}
-    {{ form_row(form.dateNaissance) }}
-    {{ form_row(form.adresse) }}
-    {{ form_row(form.codePostal) }}
-    {{ form_row(form.ville) }}
-    {{ form_row(form.numFixe) }}
-    {{ form_row(form.numPortable) }}
-    {{ form_row(form.email) }}
-    {{ form_row(form.profession) }}
-    {{ form_row(form.loisir) }}
-
-    <h2>Antécédent</h2>
-     <div>  
-    {{ form_row(form.antTete) }}
-    {{ form_row(form.antOrl) }}
-    {{ form_row(form.antOphtalmo) }}
-    {{ form_row(form.antAuditif) }}
-    {{ form_row(form.antDent) }} 
-    {{ form_row(form.antEndoc) }}
-    {{ form_row(form.antPulmo) }}
-    {{ form_row(form.antCardia) }}
-    {{ form_row(form.antDigest) }}
-    {{ form_row(form.antUrin) }}
-    {{ form_row(form.antGyneco) }}
-    {{ form_row(form.antDermato) }}
-    {{ form_row(form.antFamille) }}
-    <h3>Traumatologie</h3>
-    {{ form_row(form.antTrauma) }}
-    <h3>Opérations</h3>
-    {{ form_row(form.antOpe) }}
-    <h3>Prise de médicaments</h3>
-    {{ form_row(form.antPriseMedic) }}
+    <div id="subWrap" class="adminstratif">
+        <div class="wraps">
+            {{ form_row(form.nom) }}
+            {{ form_row(form.prenom) }}
+            {{ form_row(form.sexe) }}
+            {{ form_row(form.dateNaissance) }}
+            {{ form_row(form.profession) }}
+            {{ form_row(form.loisir) }}
+        </div>
+        <span class= "vLine administratif"></span>
+        <div class="wraps">
+            {{ form_row(form.adresse) }}
+            {{ form_row(form.codePostal) }}
+            {{ form_row(form.ville) }}
+            {{ form_row(form.numFixe) }}
+            {{ form_row(form.numPortable) }}
+            {{ form_row(form.email) }}
+           
+        </div>
     </div>
+    <h2>Antécédent</h2>
+    <div id="globalAntWrap" class="antecedent">
+        <div id="subWrap" class="antecedent">
+            <div class="wraps">
+                {{ form_row(form.antTete) }}
+                {{ form_row(form.antOrl) }}
+                {{ form_row(form.antOphtalmo) }}
+                {{ form_row(form.antAuditif) }}
+                {{ form_row(form.antDent) }} 
+                {{ form_row(form.antEndoc) }}
+                {{ form_row(form.antPulmo) }}
+            </div>
+            <span class= "vLine antecedent"></span>
+            <div class="wraps">
+                {{ form_row(form.antCardia) }}
+                {{ form_row(form.antDigest) }}
+                {{ form_row(form.antUrin) }}
+                {{ form_row(form.antGyneco) }}
+                {{ form_row(form.antDermato) }}
+                {{ form_row(form.antFamille) }}
+            </div>
+        </div>
+        <span class= "vLine antecedent"></span>
+        <div class="wrapsAnt">
+            <h3>Traumatologie</h3>
+            {{ form_row(form.antTrauma) }}
+        </div>
+        <div class="wrapsAnt">
+            <h3>Opérations</h3>
+            {{ form_row(form.antOpe) }}
+        </div>
+        <div class="wrapsAnt">
+            <h3>Prise de médicaments</h3>
+            {{ form_row(form.antPriseMedic) }}
+        </div>
+    </div>
+        
     <span></span>
     <h2>Consultations</h2>
     <div id="consultation" data-patient="{{ patient.id }}"
@@ -79,9 +98,10 @@
         {% endfor %}
     </div>
     <button id='add'>Nouvelle sceance</button>
+    {{ form_end(form) }}
+</div>
 
 
-{{ form_end(form) }}
 {% endblock %}
 {% block javascripts %}
      {{ parent() }}
@@ -90,19 +110,8 @@
 
         function putDeleteButton($form,id)
         {
-            let $deleteButton = $('<button type="button">Supprimer</button>')
+            let $deleteButton = $('<button type="button" class="uk-button-danger buttonPadding">Supprimer</button>')
             $form.append($deleteButton)
-
-            /*let deleteButton = document.createElement("BUTTON")
-            deleteButton.innerHTML ="Supprimer"
-
-            let deleting = document.getElementsByClassName("consultblock")[id]
-            deleting.append(deleteButton)
-            
-            deleteButton.addEventListener("click",function(event){
-                event.preventDefault()
-                $form.remove()
-            });*/
 
             $deleteButton.on('click', function() {
                 $form.remove()
@@ -113,7 +122,7 @@
         {
             let but = event.currentTarget
             event.preventDefault()
-            but.block.style.display = "initial";
+            but.block.style.display = "block";
             but.button.innerHTML = "Cacher";
             but.removeEventListener("click",showBlock);
             but.addEventListener("click",hideBlockAlt);
@@ -135,9 +144,14 @@
 
             let showButton = document.createElement("BUTTON")
             showButton.innerHTML ="Détails"
+            showButton.className = "uk-button-primary buttonPadding"
             var show = document.getElementsByClassName("consultblock")[id]
             show.append(showButton)
-            show.append(document.getElementById("patient_consultations_"+id+"_date_consult").value)
+
+            let consultDate = document.createElement("SPAN")
+            consultDate.innerHTML = document.getElementById("patient_consultations_"+id+"_date_consult").value
+            consultDate.className = "spanDate"
+            show.append(consultDate)
 
             showButton.addEventListener("click",showBlock);
             showButton.id = id
@@ -150,14 +164,8 @@
         {
             // Block permetant de modifier le selecteur d'id cabinet, pour la relation patient/cabinet
             let collectionCounter = 0
-            var idCabinet = window.location.href.split("/");
-            if(isNaN(idCabinet[4]))
-            {
-                idCabinet = idCabinet[4].split("#");
-                idCabinet = idCabinet[0]
-            }
-            else
-                idCabinet = idCabinet[4]
+            var idCabinet = $("#idCabinet").data("idCabinet")
+            
             let pc = document.getElementById("patient_cabinet");
             let counter = document.getElementsByClassName("consultblock").length;
 
@@ -194,6 +202,9 @@
             
                 $collectionForms = $('#consultation');
                 putDeleteButton($collectionForms.find('.consultblock').last(),counter);
+
+                var subConsultBlock = document.getElementById("patient_consultations_"+counter)
+                subConsultBlock.className="subConsult"
 
                 //On force le bon patient dans le selecteur d'objet patient du formulaire
                 var option = document.getElementById("patient_consultations_"+counter+"_patient").options;

@@ -37,7 +37,15 @@
             <input type="password" name="password" id="inputPassword" class="uk-input uk-form-width-large" required>
         </div>
     </div>
-    foreach
+
+    <div class="uk-margin">
+        <label for="listCabinet" class="uk-form-label">Veuillez choisir un cabinet</label>
+        <select name="cabinet" id="listCabinet" class="uk-select" Required>
+        {% for cabinet in cabinets %}
+            <option value="{{cabinet.id}}">{{cabinet.libelle}}</option>
+        {% endfor %}
+        </select>
+    </div>
 
 
     <input type="hidden" name="_csrf_token"

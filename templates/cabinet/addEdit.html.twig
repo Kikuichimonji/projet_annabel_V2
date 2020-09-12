@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block title %}Liste cabinet{% endblock %}
+
+{% block nav %}
+    <div >
+        <a class="uk-navbar-center" href=""><h1>Fiche Patient<h1></a>
+    </div>
+    
+    <div class="uk-navbar-right">
+        Connecté en tant que : <strong>{{app.user.username}}</strong> <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
+    </div>
+</nav>
+{% endblock %}
+
+{% block body %}
+{{form(form)}}
+{% endblock %}
