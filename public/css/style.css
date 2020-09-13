@@ -19,6 +19,16 @@ span.uk-form-icon{
 .admin{
   color: red;
 }
+#aTop
+{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+#aTop span
+{
+  margin-right: 0.5em;
+}
 
 #tdDelete
 {
@@ -88,12 +98,12 @@ span.uk-form-icon{
   padding-top: 0.5em;
   padding-bottom: 1.5em;
 }
-.wrapsAnt
+.wrapsAnt,.subConsult
 {
   padding-top: 0.5em;
   padding-bottom: 1.5em;
 }
-.wraps input,.wraps textarea,.wrapsAnt textarea
+.wraps input,.wraps textarea,.wrapsAnt textarea,.subConsult textarea,.subConsult input
 {
   margin-bottom: 0.5em;
 }

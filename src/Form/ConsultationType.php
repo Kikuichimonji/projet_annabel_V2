@@ -24,6 +24,10 @@ class ConsultationType extends AbstractType
                 "label" => "Date de consultation",
                 "attr" => ["class" => "uk-input"],
             ])
+            ->add('anamnese',TextareaType::class,[
+                "attr" => ["class" => "uk-textarea"],
+                "label" => "Anamnèse"
+                ])
             ->add('test',TextareaType::class,[
                 "attr" => ["class" => "uk-textarea"],
                 ])

@@ -58,6 +58,11 @@ class Consultation
      */
     private $patient;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $anamnese;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -155,6 +160,18 @@ class Consultation
     public function setPatient(?Patient $patient): self
     {
         $this->patient = $patient;
+
+        return $this;
+    }
+
+    public function getAnamnese(): ?string
+    {
+        return $this->anamnese;
+    }
+
+    public function setAnamnese(?string $anamnese): self
+    {
+        $this->anamnese = $anamnese;
 
         return $this;
     }

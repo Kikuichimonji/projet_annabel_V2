@@ -15,7 +15,6 @@
             </li>
         {% endfor %}
         </ul>
-        <a class="admin" href="{{path("admin_cabinet")}}"><span uk-icon="pencil"></span></a>
     </div>
     <div >
         <a class="uk-navbar-center" href="{{path("home_detail",{"id":app.session.get("cabinet").getId()})}}"><h1>Accueil<h1></a>
@@ -25,9 +24,7 @@
         {% set class= "admin" %}
     {% endif %}
     <div class="uk-navbar-right">
-        Connecté en tant que : {% if is_granted('ROLE_ADMIN') %}
-            <a class="admin" href="{{path("admin_utilisateur")}}"><span uk-icon="pencil"></span></a>
-        {% endif %}<span class="username {{class}}"> {{app.user.username}}</span>
+        Connecté en tant que : <span class="username {{class}}"> {{app.user.username}}</span>
          <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
     </div>
 </nav>
@@ -37,8 +34,15 @@
     <div id="error">{% if error == 1 %}Ce cabinet n'existe pas 
                      {% elseif error == 2 %}Vous ne pouvez pas supprimer un patient qui a des consultations
 
-                     {% endif %}</div>
-    <a onclick="return checkCabinet()" href="{{path('patient_add',{'idc':app.session.get("cabinet").getId()})}}"><span uk-icon="icon: plus-circle; ratio: 1.5"></span> Ajouter un nouveau patient</a>
+                     {% endif %}
+        </div>
+    <div id="aTop">
+        <a onclick="return checkCabinet()" href="{{path('patient_add',{'idc':app.session.get("cabinet").getId()})}}"><span uk-icon="icon: plus-circle; ratio: 1.5"></span> Ajouter un nouveau patient</a>
+        {% if is_granted('ROLE_ADMIN') %}
+                <a class="admin" href="{{path("admin_cabinet")}}"> <span uk-icon="pencil"></span>Modifier les cabinets</a>
+                <a class="admin" href="{{path("admin_utilisateur")}}"> <span uk-icon="pencil"></span>Modifier les utilisateurs</a>       
+        {% endif %}
+    </div>
     <h2 class="uk-heading-line uk-text-center"><span>Liste des patients ({{patients.getTotalItemCount}})</span></h2>
     {{ form_start(form) }}
         <!--<button type="submit">filtrer</button>-->

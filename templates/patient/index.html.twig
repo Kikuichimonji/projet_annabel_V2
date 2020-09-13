@@ -141,6 +141,9 @@
         {
             var block = document.getElementById("patient_consultations_"+id)
             block.style.display = "none"
+            newId = id+1
+            var newblock = document.getElementById("patient_consultations_"+(newId))
+            newblock.scrollIntoView({behavior: "smooth"})
 
             let showButton = document.createElement("BUTTON")
             showButton.innerHTML ="Détails"
