@@ -24,7 +24,8 @@ class PatientType extends AbstractType
                 "attr" => ["class" => "uk-input"]
             ])
             ->add('prenom', TextType::class,[
-                "attr" => ["class" => "uk-input"]
+                "attr" => ["class" => "uk-input"],
+                "label" => "Prénom",
             ])
             ->add('sexe', TextType::class,[
                 "attr" => ["class" => "uk-input"]
@@ -63,7 +64,8 @@ class PatientType extends AbstractType
             ])
             ->add('loisir',TextareaType::class,[
                 "attr" => ["class" => "uk-textarea"],
-                "required" => false
+                "required" => false,
+                "label" => "Loisirs",
             ])
             ->add('antTete',TextareaType::class,[
                 "attr" => ["class" => "uk-textarea"],
@@ -118,7 +120,7 @@ class PatientType extends AbstractType
             ->add('antEndoc',TextareaType::class,[
                 "attr" => ["class" => "uk-textarea"],
                 "required" => false,
-                "label" => "Endoctrine"
+                "label" => "Endocrine"
             ])
             ->add('antDermato',TextareaType::class,[
                 "attr" => ["class" => "uk-textarea"],

@@ -47,7 +47,7 @@
            
         </div>
     </div>
-    <h2>Antécédent</h2>
+    <h2>Antécédents</h2>
     <div id="globalAntWrap" class="antecedent">
         <div id="subWrap" class="antecedent">
             <div class="wraps">
@@ -71,7 +71,7 @@
         </div>
         <span class= "vLine antecedent"></span>
         <div class="wrapsAnt">
-            <h3>Traumatologie</h3>
+            <h3>Traumatologiques</h3>
             {{ form_row(form.antTrauma) }}
         </div>
         <div class="wrapsAnt">
@@ -97,7 +97,7 @@
             </div>
         {% endfor %}
     </div>
-    <button id='add'>Nouvelle sceance</button>
+    <button id='add' class="uk-button-secondary uk-button">Nouvelle sceance</button>
     {{ form_end(form) }}
 </div>
 
@@ -147,6 +147,7 @@
             showButton.className = "uk-button-primary buttonPadding"
             var show = document.getElementsByClassName("consultblock")[id]
             show.append(showButton)
+            document.getElementById("patient_consultations_"+id).className="subConsult"
 
             let consultDate = document.createElement("SPAN")
             consultDate.innerHTML = document.getElementById("patient_consultations_"+id+"_date_consult").value
@@ -182,8 +183,17 @@
 
             
             if(counter)
-                for(let i=0; i < counter-1; i++)
-                    hideBlock(i)
+            {
+                for(let i=0; i <= counter-1; i++)
+                    if(i==counter-1)
+                    {
+                        var subConsultBlock = document.getElementById("patient_consultations_"+i)
+                        subConsultBlock.className="subConsult"
+                    } 
+                    else
+                        hideBlock(i)
+                
+            }
                     
             let $addButton = $("#add")
             $addButton.on("click", (event) => {

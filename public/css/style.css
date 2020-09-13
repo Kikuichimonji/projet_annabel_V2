@@ -117,10 +117,7 @@ span.vLine.antecedent
 {
   background-color:#ffbbcc;
   border-radius: 25px;
-}
-.subConsult div
-{
-  
+  margin-bottom: 1em;
 }
 
 #globalAntWrap
@@ -145,7 +142,11 @@ span.vLine.antecedent
   font-weight: bold;
   font-style: italic;
 }
-
+#add.uk-button-secondary
+{
+  background-color:rgb(85, 84, 84)  ;
+  font-weight: bold;
+}
 
 
 

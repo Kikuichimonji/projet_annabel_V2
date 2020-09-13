@@ -16,8 +16,6 @@
         {% endfor %}
         </ul>
         <a class="admin" href="{{path("admin_cabinet")}}"><span uk-icon="pencil"></span></a>
-        {% set error = app.request.query.get("err")%}
-    <span id="error">{% if error == 1 %}Ce cabinet n'existe pas{% endif %}</span>
     </div>
     <div >
         <a class="uk-navbar-center" href="{{path("home_detail",{"id":app.session.get("cabinet").getId()})}}"><h1>Accueil<h1></a>
@@ -35,6 +33,11 @@
 </nav>
 {% endblock %}
 {% block body %}
+{% set error = app.request.query.get("err")%}
+    <div id="error">{% if error == 1 %}Ce cabinet n'existe pas 
+                     {% elseif error == 2 %}Vous ne pouvez pas supprimer un patient qui a des consultations
+
+                     {% endif %}</div>
     <a onclick="return checkCabinet()" href="{{path('patient_add',{'idc':app.session.get("cabinet").getId()})}}"><span uk-icon="icon: plus-circle; ratio: 1.5"></span> Ajouter un nouveau patient</a>
     <h2 class="uk-heading-line uk-text-center"><span>Liste des patients ({{patients.getTotalItemCount}})</span></h2>
     {{ form_start(form) }}
@@ -62,7 +65,9 @@
                 <td>{% if is_granted('ROLE_ADMIN') %}
                         {{patient.numFixe}}
                     {% endif %}</td>
-                <td>{{patient.adresse ~" "~ patient.codePostal ~" "~ patient.ville}}</td>
+                <td>{% if is_granted('ROLE_ADMIN') %}
+                        {{patient.adresse ~" "~ patient.codePostal ~" "~ patient.ville}}
+                    {% endif %}</td>
                 {% if patient.GetLastConsultationDate %}
                     {% set dateConsult =  patient.getLastConsultationDate.getDateConsult.format("d/m/Y") %}
                     {% set tdclass = "" %}
@@ -73,8 +78,9 @@
                     <td class="{{tdclass}}">{{dateConsult}}</td>
                 {% if is_granted('ROLE_ADMIN') %}
                     <td id="tdDelete">
-                        <a class="admin" href="{{path('patient_delete_cabinet',{'idc':app.request.attributes.get('_route_params').id,'id':patient.id})}}"><span uk-icon="trash"></span></a>
-                        <a class="admin" href="{{path('patient_delete_full',{'id':patient.id})}}"><span uk-icon="warning"></span></a>
+                    {% if not patient.GetLastConsultationDate %}
+                        <a class="admin" href="{{path('patient_delete_full',{'id':patient.id})}}"><span uk-icon="trash"></span></a>
+                    {% endif %}
                     </td>
                 {% endif %}
             </tr>

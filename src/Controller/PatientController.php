@@ -16,11 +16,13 @@ class PatientController extends AbstractController
      * @Route("/patient/{idc}", name="patient_add", defaults={"_fragment" = "consultation"})
      * @Route("/patient/{idc}/{id}", name="patient_edit", defaults={"_fragment" = "consultation"})
      */
-    public function addPatient(Patient $patient = null,Request $request,$idc = null)
+    public function addPatient(Patient $patient = null,Request $request,$idc = null,$err = null)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         if(!$patient)
             $patient = new Patient();
+        if(!$err)
+            $err = 1;
         
         $cabinets = $this->getDoctrine()
             ->getRepository(Cabinet::class)
@@ -35,7 +37,7 @@ class PatientController extends AbstractController
         if(!$isIn)
             return $this->redirectToRoute("home_detail",[
                 "id" => $idc,
-                "err" => 1,
+                "err" => $err,
                 ]);
                  
          
@@ -71,15 +73,24 @@ class PatientController extends AbstractController
      * @Route("/DeletePatient/{idc}/{id}", name="patient_delete_cabinet")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function deletePatient(Patient $patient,$idc = 0 )
+    public function deletePatient(Patient $patient,$idc = 0,Request $request )
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $entityManager = $this->getDoctrine()->getManager();
         if(!$idc)
         {
-            $this->getDoctrine()
-            ->getRepository(Patient::class)
-            ->deletePatientById($entityManager,$patient->getId());
+            $session = $request->getSession();
+            if(!count($patient->getConsultations()))
+            {
+                $this->getDoctrine()
+                ->getRepository(Patient::class)
+                ->deletePatientById($entityManager,$patient->getId());
+            }
+            else
+                return $this->redirectToRoute("home_detail",[
+                    "id" => $session->get("cabinet")->getId(),
+                    "err" => 2
+                ]);
         }
         else
         {
