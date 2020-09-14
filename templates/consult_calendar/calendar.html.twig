@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Agenda Consultation{% endblock %}
+{% block nav %}
+
+<nav class="uk-navbar-container" uk-navbar>
+    <div >
+        <a class="uk-navbar-center" href="{{path("home_detail",{"id":app.session.get("cabinet").getId()})}}"><h1>Accueil<h1></a>
+    </div>
+    {% set class= "" %}
+    {% if is_granted('ROLE_ADMIN') %}
+        {% set class= "admin" %}
+    {% endif %}
+    <div class="uk-navbar-right">
+        Connecté en tant que : <span class="username {{class}}"> {{app.user.username}}</span>
+         <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
+    </div>
+</nav>
+{% endblock %}
+{% block body %}
+    <h1>Agenda des consultations</h1>
+
+    <a href="{{ path('consult_calendar_new') }}">Nouvelle consultation</a>
+
+    <div id="calendar-holder"></div>
+
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+<script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', () => {
+            var calendarEl = document.getElementById('calendar-holder');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                defaultView: 'dayGridMonth',
+                editable: true,
+                eventSources: [
+                    {
+                        url: "{{ path('fc_load_events') }}",
+                        method: "POST",
+                        extraParams: {
+                            filters: JSON.stringify({})
+                        },
+                        failure: () => {
+                            // alert("There was an error while fetching FullCalendar!");
+                        },
+                    },
+                ],
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay',
+                },
+                plugins: [ 'interaction', 'dayGrid', 'timeGrid' ], // https://fullcalendar.io/docs/plugin-index
+                timeZone: 'UTC',
+            });
+            calendar.render();
+        });
+    </script>
+{% endblock %}

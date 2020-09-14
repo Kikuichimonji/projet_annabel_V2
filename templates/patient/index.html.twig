@@ -204,7 +204,7 @@
             
             let pc = document.getElementById("patient_cabinet");
             let counter = document.getElementsByClassName("consultblock").length;
-
+            
             Array.prototype.forEach.call(pc.options,function(opt){
                 if(opt.value == idCabinet)
                     opt.selected = true
@@ -240,8 +240,9 @@
         
                 event.preventDefault()
                 let $newConsultBlock = $("#consultation").data("prototype")//-------------------------------JQUERY ALERT
+                
                 let counter = document.getElementsByClassName("consultblock").length
-              
+                
                 idPatient = $("#consultation").data("patient")//-------------------------------JQUERY ALERT
                 
                 $newConsultBlock = $($newConsultBlock.replace(/__name__/g, counter))
@@ -262,11 +263,12 @@
                     if(opt.value == idPatient)
                         opt.selected = true
                 });
-                
                 //On cache le block precedent pour qu'il n'y ai qu'un block présent
                 let blockcounter = counter -1
-                hideBlock(blockcounter)
                 setupRadio(counter)
+                if(counter)
+                    hideBlock(blockcounter)
+                
                 
 
             })
