@@ -644,7 +644,11 @@ class Patient
 
     public function getLastConsultationDate()
     {
-        return $this->getConsultations()->last();
+        if($this->getConsultations()->last())
+            $date = date_format($this->getConsultations()->last()->getDateConsult(),"d/m/Y");
+        else
+            $date =null;
+        return $date;
     }
 
     public function setAntFamille(?string $antFamille): self

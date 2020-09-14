@@ -36,16 +36,19 @@
             {{ form_row(form.profession) }}
             {{ form_row(form.loisir) }}
         </div>
-        <span class= "vLine administratif"></span>
-        <div class="wraps">
-            {{ form_row(form.adresse) }}
-            {{ form_row(form.codePostal) }}
-            {{ form_row(form.ville) }}
-            {{ form_row(form.numFixe) }}
-            {{ form_row(form.numPortable) }}
-            {{ form_row(form.email) }}
-           
-        </div>
+        {% if is_granted('ROLE_ADMIN') %} 
+            {% set hidden = "hidden" %}
+        {% endif %}      
+            <span class= "vLine administratif "></span>
+            <div class="wraps ">
+                {{ form_row(form.adresse) }}
+                {{ form_row(form.codePostal) }}
+                {{ form_row(form.ville) }}
+                {{ form_row(form.numFixe) }}
+                {{ form_row(form.numPortable) }}
+                {{ form_row(form.email) }}
+            
+            </div>
     </div>
     <h2>Antécédents</h2>
     <div id="globalAntWrap" class="antecedent">
@@ -153,7 +156,10 @@
             document.getElementById("patient_consultations_"+id).className="subConsult"
 
             let consultDate = document.createElement("SPAN")
-            consultDate.innerHTML = document.getElementById("patient_consultations_"+id+"_date_consult").value
+            var date = new Date(document.getElementById("patient_consultations_"+id+"_date_consult").value);
+            var month = date.getMonth() + 1
+            consultDateFormat = date.getDate()+"/"+month+"/"+date.getFullYear()
+            consultDate.innerHTML = "Consultation du "+consultDateFormat
             consultDate.className = "spanDate"
             show.append(consultDate)
 
@@ -162,6 +168,32 @@
             showButton.button = showButton
             showButton.block = block         
             
+        }
+        function setupRadio(counter)
+        {
+            let radioPaiement = document.querySelectorAll("input[name='patient[consultations]["+counter+"][moyen_paiement]']");
+            let radioCount = 0;
+             for(rb of radioPaiement)
+            {
+                radioPaiement[radioCount].mainId = counter;
+                radioPaiement[radioCount].addEventListener("click",clicRadio);
+                if(radioPaiement[radioCount].checked && radioPaiement[radioCount].value != 2)
+                    document.getElementById("patient_consultations_"+counter+"_numero_cheque").parentNode.style.display = "none"
+                    
+                radioCount++; 
+            }
+        }
+        function clicRadio(event) 
+        {
+    
+            let radio = event.currentTarget
+            if(radio.value != 2) 
+                document.getElementById("patient_consultations_"+radio.mainId+"_numero_cheque").parentNode.style.display = "none"
+            else
+                document.getElementById("patient_consultations_"+radio.mainId+"_numero_cheque").parentNode.style.display = "block"
+            
+            if(radio.value == 3)
+                document.getElementById("patient_consultations_"+radio.mainId+"_montant").value= 0
         }
 
         $(document).ready(function()
@@ -188,15 +220,20 @@
             if(counter)
             {
                 for(let i=0; i <= counter-1; i++)
+                {
                     if(i==counter-1)
                     {
                         var subConsultBlock = document.getElementById("patient_consultations_"+i)
                         subConsultBlock.className="subConsult"
                     } 
                     else
+                    {
                         hideBlock(i)
-                
+                    }
+                    setupRadio(i)
+                }
             }
+            
                     
             let $addButton = $("#add")
             $addButton.on("click", (event) => {
@@ -227,12 +264,14 @@
                 });
                 
                 //On cache le block precedent pour qu'il n'y ai qu'un block présent
-                var blockcounter = counter -1
+                let blockcounter = counter -1
                 hideBlock(blockcounter)
-               
+                setupRadio(counter)
                 
-                
+
             })
+           
+                
 
         })
 

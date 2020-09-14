@@ -63,6 +63,12 @@ class Consultation
      */
     private $anamnese;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=MoyenPaiement::class, inversedBy="consultations")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $moyen_paiement;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -172,6 +178,18 @@ class Consultation
     public function setAnamnese(?string $anamnese): self
     {
         $this->anamnese = $anamnese;
+
+        return $this;
+    }
+
+    public function getMoyenPaiement(): ?MoyenPaiement
+    {
+        return $this->moyen_paiement;
+    }
+
+    public function setMoyenPaiement(?MoyenPaiement $moyen_paiement): self
+    {
+        $this->moyen_paiement = $moyen_paiement;
 
         return $this;
     }

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Patient;
 use App\Entity\Consultation;
+use App\Entity\MoyenPaiement;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,6 +41,14 @@ class ConsultationType extends AbstractType
             ->add('note',TextareaType::class,[
                 "attr" => ["class" => "uk-textarea"],
                 ])
+            ->add('moyen_paiement',EntityType::class,[
+                    "attr" => ["class" => "consultRadioButton"],
+                    'class' => MoyenPaiement::class,
+                    'choice_label' => 'libelle',
+                    'expanded' => true,
+                    "label" => "Moyen de paiement",
+                    ])
+                    
             ->add('montant',IntegerType::class,[
                 "attr" => ["class" => "uk-input"],
                 ])

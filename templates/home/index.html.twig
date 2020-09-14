@@ -73,7 +73,7 @@
                         {{patient.adresse ~" "~ patient.codePostal ~" "~ patient.ville}}
                     {% endif %}</td>
                 {% if patient.GetLastConsultationDate %}
-                    {% set dateConsult =  patient.getLastConsultationDate.getDateConsult.format("d/m/Y") %}
+                    {% set dateConsult =  patient.getLastConsultationDate %}
                     {% set tdclass = "" %}
                 {% else %}
                     {% set dateConsult =  "Pas de consultation" %}
