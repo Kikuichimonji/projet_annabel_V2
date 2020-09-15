@@ -162,6 +162,52 @@ span.vLine.antecedent
   background-color:rgb(85, 84, 84)  ;
   font-weight: bold;
 }
+#calendarBox
+{
+  display:flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+#calendar-holder
+{
+  width:70%;
+}
+#eventBox
+{
+  width:15%;
+  border: 1px solid #ccc;
+  height: 150px;
+  background: #eee;
+}
+.fc-event
+{
+  margin: 1em;
+}
+#eventBox div
+{
+  font-weight: bold;
+  text-align: center;
+}
+#eventBox div.rose
+{
+  background-color: #ffbbcc;
+  color:black;
+}
+#eventBox div.rouge
+{
+  background-color: red;
+}
+#eventBox div.bleu
+{
+  background-color: #9ebfff;
+  color:black;
+}
+#eventBox div.vert
+{
+  background-color: #b0f2b6;
+  color:black;
+}
+
 
 
 

@@ -60,8 +60,8 @@ class CalendarSubscriber implements EventSubscriberInterface
              */
 
             $ConsultEvent->setOptions([
-                'backgroundColor' => 'red',
-                'borderColor' => 'red',
+                'backgroundColor' => '#3788d8',
+                'borderColor' => '#3788d8',
             ]);
             $ConsultEvent->addOption(
                 'url',

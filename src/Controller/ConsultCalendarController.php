@@ -2,13 +2,15 @@
 
 namespace App\Controller;
 
+
 use App\Entity\ConsultCalendar;
 use App\Form\ConsultCalendarType;
 use App\Repository\ConsultCalendarRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/agenda")
@@ -105,5 +107,56 @@ class ConsultCalendarController extends AbstractController
     public function calendar(): Response
     {
         return $this->render('consult_calendar/calendar.html.twig');
+    }
+
+    /**
+     * @Route("/save", name="consult_calendar_save", methods={"GET","POST"})
+     */
+    public function save(Request $request): Response
+    {
+      
+        $title = $request->request->get("title");
+
+        $start= new \DateTime($request->request->get("start"));
+        $end = new \DateTime($request->request->get("end"));
+
+      
+        $consultCalendar = new ConsultCalendar();
+        $consultCalendar->setTitle($title);
+        $consultCalendar->setStartDate($start);
+        $consultCalendar->setEndDate($end);
+        
+        
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($consultCalendar);
+        $entityManager->flush();
+        
+
+        return new Response('Done',200);
+    }
+
+    /**
+     * @Route("/modify/{id}", name="consult_calendar_save", methods={"GET","POST"})
+     */
+    public function modify(Request $request,ConsultCalendar $consultCalendar): Response
+    {
+      
+        $title = $request->request->get("title");
+
+        $start= new \DateTime($request->request->get("start"));
+        $end = new \DateTime($request->request->get("end"));
+
+      
+        $consultCalendar->setTitle($title);
+        $consultCalendar->setStartDate($start);
+        $consultCalendar->setEndDate($end);
+        
+        
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($consultCalendar);
+        $entityManager->flush();
+        
+
+        return new Response('Done',200);
     }
 }
