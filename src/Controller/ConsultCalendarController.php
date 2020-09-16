@@ -98,7 +98,7 @@ class ConsultCalendarController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('agenda_list');
+        return $this->redirectToRoute('agenda');
     }
 
     /**
@@ -136,7 +136,7 @@ class ConsultCalendarController extends AbstractController
     }
 
     /**
-     * @Route("/modify/{id}", name="consult_calendar_save", methods={"GET","POST"})
+     * @Route("/modify/{id}", name="consult_calendar_modify", methods={"GET","POST"})
      */
     public function modify(Request $request,ConsultCalendar $consultCalendar): Response
     {
