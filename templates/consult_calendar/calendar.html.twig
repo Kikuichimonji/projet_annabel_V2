@@ -5,7 +5,9 @@
 
 <nav class="uk-navbar-container" uk-navbar>
     <div >
-        <a class="uk-navbar-center" href="{{path("home_detail",{"id":app.session.get("cabinet").getId()})}}"><h1>Accueil<h1></a>
+        {% if app.session.get("cabinet") %}
+            <a class="uk-navbar-center" href="{{path("home_detail",{"id":app.session.get("cabinet").getId()})}}"><h1>Accueil<h1></a>
+        {% endif %}
     </div>
     {% set class= "" %}
     {% if is_granted('ROLE_ADMIN') %}

@@ -6,13 +6,15 @@
     <div class="uk-navbar-left">
         <ul class="uk-navbar-nav">
         {% for cabinet in cabinets %}
-            {% if cabinet.id == app.session.get("cabinet").getId() %}
-                <li class="uk-active">
-            {% else %}
-                <li>
+            {% if app.session.get("cabinet") %}             
+                {% if cabinet.id == app.session.get("cabinet").getId() %}
+                    <li class="uk-active">
+                {% else %}
+                    <li>
+                {% endif %}
+                    <a href="{{path("home_detail",{"id":cabinet.id})}}">{{cabinet.libelle}}</a>
+                </li>
             {% endif %}
-                <a href="{{path("home_detail",{"id":cabinet.id})}}">{{cabinet.libelle}}</a>
-            </li>
         {% endfor %}
         </ul>
     </div>
