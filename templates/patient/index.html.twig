@@ -111,118 +111,164 @@
 
      <script>      
 
-        function putDeleteButton($form,id)
+        // Fonction permetant d'ajouter un bouton supression à la fin du formulaire de consultation
+        function putDeleteButton(form)
         {
-            let $deleteButton = $('<button type="button" class="uk-button-danger buttonPadding">Supprimer</button>')
-            $form.append($deleteButton)
+            //creation du bouton de suppression
+            let deleteButton = document.createElement("BUTTON")
+            deleteButton.className = "uk-button-danger buttonPadding"
+            deleteButton.innerHTML = "Supprimer"
 
-            $deleteButton.on('click', function() {
-                $form.remove()
-            })
+            //Le bouton est attaché à la fin du formulaire
+            form.append(deleteButton)
+
+            //On attache l'évenement click au bouton qui permetra de supprimer le formulaire
+            deleteButton.addEventListener("click",function()
+            {
+                form.remove()
+            });
         }
 
-        function showBlock(event)
+        //Fonction permetant de cacher et réafficher un block consultation
+        function hideShowBlock(event)
         {
+            // but est le bouton d'affichage correspondant au bon block où l'on click
             let but = event.currentTarget
             event.preventDefault()
-            but.block.style.display = "block";
-            but.button.innerHTML = "Cacher";
-            but.removeEventListener("click",showBlock);
-            but.addEventListener("click",hideBlockAlt);
 
+            //on verifie qu'il y a bien un statut puis on alterne entre afficher et cacher
+            if(but.statut)
+                if (but.statut == "hidden")
+                {
+                    but.statut = "shown"
+                    but.block.style.display = "block";
+                    but.innerHTML = "Cacher";
+                }  
+                else
+                {
+                    but.statut = "hidden"
+                    but.block.style.display = "none"
+                    but.innerHTML = "Détails";
+                }
         }
-        function hideBlockAlt(event)
-        {
-            event.preventDefault();
-            let but = event.currentTarget;
-            but.block.style.display = "none"
-            but.innerHTML = "Détails";
-            but.removeEventListener("click",hideBlockAlt);
-            but.addEventListener("click",showBlock);
-        }
+
+        //Fonction non evenementielle permetant de cacher tout les blocks sauf la dernière consultation
         function hideBlock(id)
         {
+            
+            //On cherche le block avec l'id reçue puis on le cache
             var block = document.getElementById("patient_consultations_"+id)
             block.style.display = "none"
+
+            //On lui donne une classe pour le CSS
+            block.className="subConsult"
+
+            //On prend l'id suivante et on scroll pour afficher la dernière
             newId = id+1
             var newblock = document.getElementById("patient_consultations_"+(newId))
             newblock.scrollIntoView({behavior: "smooth"})
 
+            //Creation du bouton Show/Hide et initialisation du statut
             let showButton = document.createElement("BUTTON")
             showButton.innerHTML ="Détails"
             showButton.className = "uk-button-primary buttonPadding"
-            var show = document.getElementsByClassName("consultblock")[id]
-            show.append(showButton)
-            document.getElementById("patient_consultations_"+id).className="subConsult"
+            showButton.statut = "hidden"
 
+            //On cerche le block qu'on veux cacher et on y attache le bouton pour le réafficher
+            if(document.getElementsByClassName("consultblock")[id+1])
+            {
+                var show = document.getElementsByClassName("consultblock")[id]
+                show.append(showButton)
+            }
+
+            //consultDate est la date de la consultation, pour mieux identifier le block
             let consultDate = document.createElement("SPAN")
+
+            //Reformatage de la date pour une meilleur lisibilité, getMonth retourne les mois sous le format 0-11
             var date = new Date(document.getElementById("patient_consultations_"+id+"_date_consult").value);
             var month = date.getMonth() + 1
             consultDateFormat = date.getDate()+"/"+month+"/"+date.getFullYear()
             consultDate.innerHTML = "Consultation du "+consultDateFormat
             consultDate.className = "spanDate"
+            //On attache la date après le bouton 
             show.append(consultDate)
 
-            showButton.addEventListener("click",showBlock);
+            //On attache l'évènement d'alternance au bouton et on lui donne des paramètres facilement atteignable via l'évenement
+            showButton.addEventListener("click",hideShowBlock);
             showButton.id = id
-            showButton.button = showButton
-            showButton.block = block         
+            showButton.block = block        
             
         }
+
+        //fonction mettant en place les evenements des radio boutons de moyen de paiement, pour afficher ou cacher le numero de chèque  
         function setupRadio(counter)
         {
+            //On utilise le querySelector pour chercher tout les elements correspondant aux critères
             let radioPaiement = document.querySelectorAll("input[name='patient[consultations]["+counter+"][moyen_paiement]']");
             let radioCount = 0;
-             for(rb of radioPaiement)
+            
+            // On parcours tout les boutons du block radio bouton
+            for(rb of radioPaiement)
             {
+                
+                // on donne une idée unique a chaque bouton pour cibler les effets de l'évenement de click
                 radioPaiement[radioCount].mainId = counter;
+               
                 radioPaiement[radioCount].addEventListener("click",clicRadio);
+
+                //si un choxi est présent au chargement et qu'il n'est pas "chèque" on cache tout de suite le champ
                 if(radioPaiement[radioCount].checked && radioPaiement[radioCount].value != 2)
                     document.getElementById("patient_consultations_"+counter+"_numero_cheque").parentNode.style.display = "none"
-                    
+                // On passe au bouton radio suivant    
                 radioCount++; 
             }
         }
+
+        //Fonction permettant de cacher ou réafficher le champ "numero de chèque"
         function clicRadio(event) 
         {
-    
             let radio = event.currentTarget
             if(radio.value != 2) 
                 document.getElementById("patient_consultations_"+radio.mainId+"_numero_cheque").parentNode.style.display = "none"
             else
                 document.getElementById("patient_consultations_"+radio.mainId+"_numero_cheque").parentNode.style.display = "block"
             
+            //Choix par default si la consultation n'as pas encore été payée
             if(radio.value == 3)
                 document.getElementById("patient_consultations_"+radio.mainId+"_montant").value= 0
         }
 
+        //On attend que le DOM sois chargé avant de lancer les fonctions afin de pas avoir de soucis de synchronisation
         $(document).ready(function()
         {
-            // Block permetant de modifier le selecteur d'id cabinet, pour la relation patient/cabinet
-            let collectionCounter = 0
-            var idCabinet = $("#idCabinet").data("idCabinet")
-            
-            let pc = document.getElementById("patient_cabinet");
-            let counter = document.getElementsByClassName("consultblock").length;
-            
-            Array.prototype.forEach.call(pc.options,function(opt){
+            // on recupère l'id du cabinet de la session quia  été stocké dans les dataset d'un span
+            var idCabinet = document.getElementById("idCabinet").dataset.cabinet
+
+            //on récupère le select et on ajoute le cabinet actuelle dans la liste des cabinet visité du patient
+            let patientCabinet = document.getElementById("patient_cabinet");
+            Array.prototype.forEach.call(patientCabinet.options,function(opt){
                 if(opt.value == idCabinet)
                     opt.selected = true
             });
-            
+
+            //on recupère les infos qu'on a stockée dans le conteneur principal des consultations
             $collectionForms = $('#consultation');
+            //On rajoute un bouton de suppresion a chaque block de consultation et on lui envoie l'id
             $collectionForms.find('.consultblock').each(function() {
-                putDeleteButton($(this),collectionCounter);
-                collectionCounter++
+                putDeleteButton($(this));
             });
 
-            
+             //Ce compteur sert a savoir si des consultations existe déjà 
+            let counter = document.getElementsByClassName("consultblock").length;
+
+            //Si il y a des consultations déjà existante, on les chache toute sauf la dernière
             if(counter)
             {
                 for(let i=0; i <= counter-1; i++)
                 {
                     if(i==counter-1)
                     {
+                        //on applique le CSS au dernier block visible
                         var subConsultBlock = document.getElementById("patient_consultations_"+i)
                         subConsultBlock.className="subConsult"
                     } 
@@ -235,38 +281,41 @@
             }
             
                     
-            let $addButton = $("#add")
-            $addButton.on("click", (event) => {
-        
+            let addButton = document.getElementById("add")
+            
+            addButton.addEventListener("click",function(event)
+            { 
                 event.preventDefault()
-                let $newConsultBlock = $("#consultation").data("prototype")//-------------------------------JQUERY ALERT
+
+                let $newConsultBlock = document.getElementById("consultation").dataset.prototype
                 
                 let counter = document.getElementsByClassName("consultblock").length
                 
-                idPatient = $("#consultation").data("patient")//-------------------------------JQUERY ALERT
+                idPatient= document.getElementById("consultation").dataset.patient
                 
-                $newConsultBlock = $($newConsultBlock.replace(/__name__/g, counter))
+                $newConsultBlock = $($newConsultBlock.replace(/__name__/g, counter))  //// JQUERY
                 $("#consultation").append(
                     $($("#consultation").data("widget-tags")).html($newConsultBlock)
                 )
-                $("#consultation").append($addButton)
+                $("#consultation").append(addButton)
             
-                $collectionForms = $('#consultation');
+                $collectionForms = $('#consultation'); /////JQUERY
                 putDeleteButton($collectionForms.find('.consultblock').last(),counter);
 
                 var subConsultBlock = document.getElementById("patient_consultations_"+counter)
                 subConsultBlock.className="subConsult"
 
                 //On force le bon patient dans le selecteur d'objet patient du formulaire
-                var option = document.getElementById("patient_consultations_"+counter+"_patient").options;
-                [].forEach.call(option,function(opt){
-                    if(opt.value == idPatient)
-                        opt.selected = true
-                });
-                //On cache le block precedent pour qu'il n'y ai qu'un block présent
-                let blockcounter = counter -1
+                var selectClient = document.getElementById("patient_consultations_"+counter+"_patient");
+                selectClient.value = idPatient
+
+                //On met en place les évenement des radio bouton
                 setupRadio(counter)
-                if(counter)
+
+                /*On cache le block precedent pour qu'il n'y ai qu'un block affiché tout en vérifiant qu'un block précent n'existe pas déjà 
+                (ex: on crée un evenement juste après en avoir supprimé un, donc rien a cacher)*/
+                let blockcounter = counter -1
+                if(counter && !document.getElementById(blockcounter))
                     hideBlock(blockcounter)
                 
                 
