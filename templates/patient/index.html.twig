@@ -287,20 +287,31 @@
             { 
                 event.preventDefault()
 
-                let $newConsultBlock = document.getElementById("consultation").dataset.prototype
+                let newConsultBlock = document.getElementById("consultation").dataset.prototype
                 
                 let counter = document.getElementsByClassName("consultblock").length
                 
                 idPatient= document.getElementById("consultation").dataset.patient
                 
-                $newConsultBlock = $($newConsultBlock.replace(/__name__/g, counter))  //// JQUERY
-                $("#consultation").append(
-                    $($("#consultation").data("widget-tags")).html($newConsultBlock)
-                )
-                $("#consultation").append(addButton)
+                
+                newConsultBlock = newConsultBlock.replace(/__name__/g, counter) 
+                
+                
+                let consultation = document.getElementById("consultation")
+                let widgetTags = consultation.dataset.widgetTags
+                let consultDiv = document.createElement('div')
+                consultDiv.className = "consultblock"
+
+                consultation.append( consultDiv )
+
+                consulList = document.getElementsByClassName("consultblock")
+                consulList[consulList.length -1].innerHTML = newConsultBlock
+                
+                consultation.append(addButton)
             
-                $collectionForms = $('#consultation'); /////JQUERY
-                putDeleteButton($collectionForms.find('.consultblock').last(),counter);
+                collectionForms = document.getElementById("consultation"); 
+        
+                putDeleteButton(consulList[consulList.length-1],counter);
 
                 var subConsultBlock = document.getElementById("patient_consultations_"+counter)
                 subConsultBlock.className="subConsult"
