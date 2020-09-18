@@ -27,6 +27,11 @@ class Files
      */
     private $patient;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $date_creation;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +57,18 @@ class Files
     public function setPatient(?Patient $patient): self
     {
         $this->patient = $patient;
+
+        return $this;
+    }
+
+    public function getDateCreation(): ?\DateTimeInterface
+    {
+        return $this->date_creation;
+    }
+
+    public function setDateCreation(\DateTimeInterface $date_creation): self
+    {
+        $this->date_creation = $date_creation;
 
         return $this;
     }

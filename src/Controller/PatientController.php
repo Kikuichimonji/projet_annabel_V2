@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Cabinet;
 use App\Entity\Patient;
+use App\Entity\Utilisateur;
 use App\Form\PatientType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,6 +28,7 @@ class PatientController extends AbstractController
         $cabinets = $this->getDoctrine()
             ->getRepository(Cabinet::class)
             ->getAll(); 
+        $utilisateurs = $this->getDoctrine()->getRepository(Utilisateur::class)->getAll();
 
         $isIn = 0;
         if(is_numeric($idc))   
@@ -65,6 +67,7 @@ class PatientController extends AbstractController
             "form" => $form->createView(),
             "patient" => $patient,
             "cabinets" => $cabinets,
+            "utilisateurs" => $utilisateurs,
         ]);
     }
 

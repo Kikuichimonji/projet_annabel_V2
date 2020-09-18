@@ -25,6 +25,8 @@
 {% block body %}
 <div id="mainWraps">
     <span id="idCabinet" data-cabinet="{{ app.session.get("cabinet").getId() }}"></span>
+    <span id="idUtilisateur" data-idUtilisateur="{{ app.user.getId()  }}" data-nomUtilisateur="{{ app.user.getUsername()}}"></span>
+
     {{form_start(form)}}
     <h2>Administratif</h2>
     <div id="subWrap" class="adminstratif">
@@ -110,7 +112,6 @@
      {{ parent() }}
 
      <script>      
-
         // Fonction permetant d'ajouter un bouton supression à la fin du formulaire de consultation
         function putDeleteButton(form)
         {
@@ -184,12 +185,10 @@
             //consultDate est la date de la consultation, pour mieux identifier le block
             let consultDate = document.createElement("SPAN")
 
-            //Reformatage de la date pour une meilleur lisibilité, getMonth retourne les mois sous le format 0-11
-            var date = new Date(document.getElementById("patient_consultations_"+id+"_date_consult").value);
-            var month = date.getMonth() + 1
-            consultDateFormat = date.getDate()+"/"+month+"/"+date.getFullYear()
-            consultDate.innerHTML = "Consultation du "+consultDateFormat
+            //On recupère le champ texte qui contient le resultat de la propiété getTexte() pour la date et l'utilisateur
+            consultDate.innerHTML = document.getElementById("patient_consultations_"+id+"_texte").value
             consultDate.className = "spanDate"
+
             //On attache la date après le bouton 
             show.append(consultDate)
 
@@ -252,7 +251,7 @@
             });
 
             //on recupère les infos qu'on a stockée dans le conteneur principal des consultations
-            $collectionForms = $('#consultation');
+            $collectionForms = $('#consultation'); ////            JQUERY
             //On rajoute un bouton de suppresion a chaque block de consultation et on lui envoie l'id
             $collectionForms.find('.consultblock').each(function() {
                 putDeleteButton($(this));
@@ -273,52 +272,62 @@
                         subConsultBlock.className="subConsult"
                     } 
                     else
-                    {
-                        hideBlock(i)
+                    {   //si le block n'est pas le dernier on le cache
+                        hideBlock(i)  
                     }
+                    //dans tout les cas on met en place les evenements des boutons radio de paiement
                     setupRadio(i)
                 }
             }
             
-                    
+            //On recupère les propriétés du bouton de nouvelle sceance existant
             let addButton = document.getElementById("add")
             
             addButton.addEventListener("click",function(event)
             { 
                 event.preventDefault()
 
+                //On récupère le prototype de consultation 
                 let newConsultBlock = document.getElementById("consultation").dataset.prototype
                 
+                //On compte le nombre de block de consultation déjà présent
                 let counter = document.getElementsByClassName("consultblock").length
                 
-                idPatient= document.getElementById("consultation").dataset.patient
-                
-                
+                // On attribue une id unique à chaque blocks et elements de la consultation
                 newConsultBlock = newConsultBlock.replace(/__name__/g, counter) 
                 
-                
-                let consultation = document.getElementById("consultation")
-                let widgetTags = consultation.dataset.widgetTags
+                //On crée le div conteneur de chaque block de consultation
                 let consultDiv = document.createElement('div')
                 consultDiv.className = "consultblock"
 
+                //On l'intègre a la fin du block principal 
+                let consultation = document.getElementById("consultation")
                 consultation.append( consultDiv )
 
+                //On insère le prototype dans le block créé 
                 consulList = document.getElementsByClassName("consultblock")
                 consulList[consulList.length -1].innerHTML = newConsultBlock
                 
                 consultation.append(addButton)
-            
-                collectionForms = document.getElementById("consultation"); 
         
+                //on insère le bouton de suppression à la fin
                 putDeleteButton(consulList[consulList.length-1],counter);
 
+                //On attribue une classe au block de formulaire pour le css (sans les boutons de suppression et de visibilité)
                 var subConsultBlock = document.getElementById("patient_consultations_"+counter)
                 subConsultBlock.className="subConsult"
-
+                
                 //On force le bon patient dans le selecteur d'objet patient du formulaire
+                idPatient= document.getElementById("consultation").dataset.patient
                 var selectClient = document.getElementById("patient_consultations_"+counter+"_patient");
                 selectClient.value = idPatient
+                
+                //counter2 = counter- 1
+                //alert(document.getElementById("patient_consultations_"+counter+"_utilisateur").selectedIndex )
+                //On force le bon utilisateur dans le selecteur d'objet utilisateur du formulaire
+                idUtilisateur = document.getElementById("idUtilisateur").dataset.idutilisateur
+                var selectUtilisateur = document.getElementById("patient_consultations_"+counter+"_utilisateur");
+                selectUtilisateur.value = idUtilisateur
 
                 //On met en place les évenement des radio bouton
                 setupRadio(counter)
@@ -328,12 +337,8 @@
                 let blockcounter = counter -1
                 if(counter && !document.getElementById(blockcounter))
                     hideBlock(blockcounter)
-                
-                
-
-            })
-           
-                
+                   
+            })       
 
         })
 

@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Patient;
 use App\Entity\Consultation;
 use App\Entity\MoyenPaiement;
+use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -63,6 +64,17 @@ class ConsultationType extends AbstractType
                 "attr" => ["class" => "hidden"],
                 "label" => false
             
+            ])
+            ->add('utilisateur',EntityType::class,[
+                'class' => Utilisateur::class,
+                'choice_label' => 'id',
+                "attr" => ["class" => "hidden"],
+                "label" => false,       
+            ])
+            ->add('texte', TextType::class,[
+                "attr" => ["class" => "hidden"],
+                "label" => false,
+                "required" => false,
             ])
         ;
     }

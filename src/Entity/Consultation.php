@@ -69,6 +69,12 @@ class Consultation
      */
     private $moyen_paiement;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="consultations")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $utilisateur;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -190,6 +196,28 @@ class Consultation
     public function setMoyenPaiement(?MoyenPaiement $moyen_paiement): self
     {
         $this->moyen_paiement = $moyen_paiement;
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getTexte(){
+        return "Consultation du ".$this->date_consult->format("d/m/Y")." par ".$this->utilisateur->getUsername();
+    }
+
+    public function setTexte(String $texte = null){
+        $this->texte = $texte;
 
         return $this;
     }
