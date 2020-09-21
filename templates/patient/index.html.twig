@@ -6,8 +6,8 @@
     <div class="uk-navbar-left">
         <ul class="uk-navbar-nav">
            <li class="uk-active">
-                <a href="{{path('home_detail',{'id':app.session.get("cabinet").getId()})}}">Accueil - 
-                    {{app.session.get("cabinet").getLibelle()}}
+                <a href="{{path('home_detail',{'id':app.session.get("cabinet").getId()}) |e}}">Accueil - 
+                    {{app.session.get("cabinet").getLibelle()|e}}
                 </a>
             </li>
         </ul>
@@ -17,15 +17,13 @@
     </div>
     
     <div class="uk-navbar-right">
-        Connecté en tant que : <strong>{{app.user.username}}</strong> <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
+        Connecté en tant que : <strong>{{app.user.username |e}}</strong> <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
     </div>
 </nav>
 {% endblock %}
 
 {% block body %}
 <div id="mainWraps">
-    <span id="idCabinet" data-cabinet="{{ app.session.get("cabinet").getId() }}"></span>
-    <span id="idUtilisateur" data-idUtilisateur="{{ app.user.getId()  }}" data-nomUtilisateur="{{ app.user.getUsername()}}"></span>
 
     {{form_start(form)}}
     <h2>Administratif</h2>
@@ -89,12 +87,13 @@
         </div>
     </div>
         
-    <span></span>
+ 
     <h2>Consultations</h2>
-    <div id="consultation" data-patient="{{ patient.id }}"
+    <div id="consultation" data-patient="{{ patient.id |e}}"
         data-prototype="{{ form_widget(form.consultations.vars.prototype)|e }}"
         data-widget-tags="{{ '<div class="consultblock"></div>'|e }}"
-        data-widget-counter="{{ form.consultations|length }}">
+        data-cabinet="{{ app.session.get("cabinet").getId() |e}}"
+        data-idUtilisateur="{{ app.user.getId() |e }}">
         {% for consult in form.consultations %}
             <div class="consultblock">
                 {{ form_errors(consult) }}
@@ -103,7 +102,9 @@
         {% endfor %}
     </div>
     <button id='add' class="uk-button-secondary uk-button">Nouvelle sceance</button>
+    <span id="error"></span>
     {{ form_end(form) }}
+    
 </div>
 
 
@@ -111,7 +112,88 @@
 {% block javascripts %}
      {{ parent() }}
 
-     <script>      
+     <script>     
+        function addNewBlock(event)
+        { 
+            
+            event.preventDefault()
+            //On récupère la dernière consultation 
+            let consultList = document.getElementsByClassName("consultblock")
+            let lastConsult = consultList[consultList.length -1]
+
+            //On récupère la liste des input required 
+            let inputList = lastConsult.getElementsByClassName("consultReq")
+            let isOkay = 1
+
+            //On vérifie que les radio bouton sont ien check
+            if(!lastConsult.querySelector('input:checked'))
+                isOkay = 0
+                
+            //On vérifie chaque input pour voir si ils ont bien une valeur
+            Array.prototype.forEach.call(inputList,function(input){
+                if(!input.value)
+                    isOkay = 0
+            });
+
+            //Si tout est okay on ajoute le block
+            if (isOkay) 
+            {
+                addButton = event.currentTarget
+                let consultationBlock = document.getElementById("consultation")
+                //On récupère le prototype de consultation 
+                let newConsultBlock = consultationBlock.dataset.prototype
+                
+                //On compte le nombre de block de consultation déjà présent
+                let counter = document.getElementsByClassName("consultblock").length
+                
+                // On attribue une id unique à chaque blocks et elements de la consultation
+                newConsultBlock = newConsultBlock.replace(/__name__/g, counter) 
+                
+                //On crée le div conteneur de chaque block de consultation
+                let consultDiv = document.createElement('div')
+                consultDiv.className = "consultblock"
+
+                //On l'intègre a la fin du block principal 
+                let consultation = document.getElementById("consultation")
+                consultation.append( consultDiv )
+
+                //On insère le prototype dans le block créé 
+                consulList = document.getElementsByClassName("consultblock")
+                consulList[consulList.length -1].innerHTML = newConsultBlock
+                
+                consultation.append(addButton)
+        
+                //on insère le bouton de suppression à la fin
+                putDeleteButton(consulList[consulList.length-1],counter);
+                
+                //On attribue une classe au block de formulaire pour le css (sans les boutons de suppression et de visibilité)
+                var subConsultBlock = document.getElementById("patient_consultations_"+counter)
+                subConsultBlock.className="subConsult"
+                
+                //On force le bon patient dans le selecteur d'objet patient du formulaire
+                idPatient= consultationBlock.dataset.patient
+                var selectPatient = document.getElementById("patient_consultations_"+counter+"_patient");
+                selectPatient.value = idPatient
+                
+                //On force le bon utilisateur dans le selecteur d'objet utilisateur du formulaire
+                idUtilisateur = consultationBlock.dataset.idutilisateur
+                var selectUtilisateur = document.getElementById("patient_consultations_"+counter+"_utilisateur");
+                selectUtilisateur.value = idUtilisateur
+
+                //On met en place les évenement des radio bouton
+                setupRadio(counter)
+
+                /*On cache le block precedent pour qu'il n'y ai qu'un block affiché tout en vérifiant qu'un block précent n'existe pas déjà 
+                (ex: on crée un evenement juste après en avoir supprimé un, donc rien a cacher)*/
+                let blockcounter = counter -1
+                if(counter && !document.getElementById(blockcounter))
+                    hideBlock(blockcounter)
+                document.getElementById("error").innerHTML = ""
+            }
+            else
+                document.getElementById("error").innerHTML = "Tous les champs de la consultation ne sont pas remplis"
+
+        }
         // Fonction permetant d'ajouter un bouton supression à la fin du formulaire de consultation
         function putDeleteButton(form)
         {
@@ -237,11 +319,13 @@
                 document.getElementById("patient_consultations_"+radio.mainId+"_montant").value= 0
         }
 
-        //On attend que le DOM sois chargé avant de lancer les fonctions afin de pas avoir de soucis de synchronisation
-        $(document).ready(function()
+        //On attend que le DOM sois chargé avant de lancer les fonctions afin de ne pas avoir de soucis de synchronisation
+        //$(document).ready(function()
+        window.addEventListener('DOMContentLoaded',function()
         {
-            // on recupère l'id du cabinet de la session quia  été stocké dans les dataset d'un span
-            var idCabinet = document.getElementById("idCabinet").dataset.cabinet
+            let consultationBlock = document.getElementById("consultation")
+            // on recupère l'id du cabinet de la session qui a  été stocké dans les dataset 
+            var idCabinet = consultationBlock.dataset.cabinet
 
             //on récupère le select et on ajoute le cabinet actuelle dans la liste des cabinet visité du patient
             let patientCabinet = document.getElementById("patient_cabinet");
@@ -250,12 +334,14 @@
                     opt.selected = true
             });
 
-            //on recupère les infos qu'on a stockée dans le conteneur principal des consultations
-            $collectionForms = $('#consultation'); ////            JQUERY
-            //On rajoute un bouton de suppresion a chaque block de consultation et on lui envoie l'id
-            $collectionForms.find('.consultblock').each(function() {
-                putDeleteButton($(this));
+    
+            //On rajoute un bouton de suppresion a chaque block de consultation
+            let collectionForms = document.getElementsByClassName("consultblock")
+            Array.prototype.forEach.call(collectionForms,function(forms){
+                putDeleteButton(forms)
             });
+
+
 
              //Ce compteur sert a savoir si des consultations existe déjà 
             let counter = document.getElementsByClassName("consultblock").length;
@@ -282,64 +368,7 @@
             
             //On recupère les propriétés du bouton de nouvelle sceance existant
             let addButton = document.getElementById("add")
-            
-            addButton.addEventListener("click",function(event)
-            { 
-                event.preventDefault()
-
-                //On récupère le prototype de consultation 
-                let newConsultBlock = document.getElementById("consultation").dataset.prototype
-                
-                //On compte le nombre de block de consultation déjà présent
-                let counter = document.getElementsByClassName("consultblock").length
-                
-                // On attribue une id unique à chaque blocks et elements de la consultation
-                newConsultBlock = newConsultBlock.replace(/__name__/g, counter) 
-                
-                //On crée le div conteneur de chaque block de consultation
-                let consultDiv = document.createElement('div')
-                consultDiv.className = "consultblock"
-
-                //On l'intègre a la fin du block principal 
-                let consultation = document.getElementById("consultation")
-                consultation.append( consultDiv )
-
-                //On insère le prototype dans le block créé 
-                consulList = document.getElementsByClassName("consultblock")
-                consulList[consulList.length -1].innerHTML = newConsultBlock
-                
-                consultation.append(addButton)
-        
-                //on insère le bouton de suppression à la fin
-                putDeleteButton(consulList[consulList.length-1],counter);
-
-                //On attribue une classe au block de formulaire pour le css (sans les boutons de suppression et de visibilité)
-                var subConsultBlock = document.getElementById("patient_consultations_"+counter)
-                subConsultBlock.className="subConsult"
-                
-                //On force le bon patient dans le selecteur d'objet patient du formulaire
-                idPatient= document.getElementById("consultation").dataset.patient
-                var selectClient = document.getElementById("patient_consultations_"+counter+"_patient");
-                selectClient.value = idPatient
-                
-                //counter2 = counter- 1
-                //alert(document.getElementById("patient_consultations_"+counter+"_utilisateur").selectedIndex )
-                //On force le bon utilisateur dans le selecteur d'objet utilisateur du formulaire
-                idUtilisateur = document.getElementById("idUtilisateur").dataset.idutilisateur
-                var selectUtilisateur = document.getElementById("patient_consultations_"+counter+"_utilisateur");
-                selectUtilisateur.value = idUtilisateur
-
-                //On met en place les évenement des radio bouton
-                setupRadio(counter)
-
-                /*On cache le block precedent pour qu'il n'y ai qu'un block affiché tout en vérifiant qu'un block précent n'existe pas déjà 
-                (ex: on crée un evenement juste après en avoir supprimé un, donc rien a cacher)*/
-                let blockcounter = counter -1
-                if(counter && !document.getElementById(blockcounter))
-                    hideBlock(blockcounter)
-                   
-            })       
-
+            addButton.addEventListener("click",addNewBlock)
         })
 
      

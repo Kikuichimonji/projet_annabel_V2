@@ -19,7 +19,6 @@ class UtilisateurController extends AbstractController
     public function index()
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $entityManager = $this->getDoctrine()->getManager();
         
         $user = $this->getDoctrine()
         ->getRepository(Utilisateur::class)
@@ -32,7 +31,7 @@ class UtilisateurController extends AbstractController
     }
 
     /**
-     * @Route("/utilisateurEdit/{id}", name="admin_edit_utilisateur")
+     * @Route("/utilisateur/edit/{id}", name="admin_edit_utilisateur")
      * @IsGranted("ROLE_ADMIN")
      */
     public function editUser(Utilisateur $user,Request $request,UserPasswordEncoderInterface $passwordEncoder)
@@ -68,7 +67,7 @@ class UtilisateurController extends AbstractController
 
 
     /**
-     * @Route("/delete/{id}", name="admin_delete_utilisateur")
+     * @Route("/utilisateur/delete/{id}", name="admin_delete_utilisateur")
      * @IsGranted("ROLE_ADMIN")
      */
     public function deleteUtilisateur(Utilisateur $user)

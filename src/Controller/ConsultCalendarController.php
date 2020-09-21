@@ -22,6 +22,7 @@ class ConsultCalendarController extends AbstractController
      */
     public function index(ConsultCalendarRepository $consultCalendarRepository): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         return $this->render('consult_calendar/index.html.twig', [
             'consult_calendars' => $consultCalendarRepository->findAll(),
         ]);
@@ -31,6 +32,7 @@ class ConsultCalendarController extends AbstractController
      */
     public function fullCalendar(ConsultCalendarRepository $consultCalendarRepository): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         return $this->render('consult_calendar/calendar.html.twig');
     }
 
@@ -39,6 +41,7 @@ class ConsultCalendarController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $consultCalendar = new ConsultCalendar();
         $form = $this->createForm(ConsultCalendarType::class, $consultCalendar);
         $form->handleRequest($request);
@@ -62,6 +65,7 @@ class ConsultCalendarController extends AbstractController
      */
     public function show(ConsultCalendar $consultCalendar): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         return $this->render('consult_calendar/show.html.twig', [
             'consult_calendar' => $consultCalendar,
         ]);
@@ -72,6 +76,7 @@ class ConsultCalendarController extends AbstractController
      */
     public function edit(Request $request, ConsultCalendar $consultCalendar): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $form = $this->createForm(ConsultCalendarType::class, $consultCalendar);
         $form->handleRequest($request);
 
@@ -92,6 +97,7 @@ class ConsultCalendarController extends AbstractController
      */
     public function delete(Request $request, ConsultCalendar $consultCalendar): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         if ($this->isCsrfTokenValid('delete'.$consultCalendar->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($consultCalendar);
@@ -106,6 +112,7 @@ class ConsultCalendarController extends AbstractController
      */
     public function calendar(): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         return $this->render('consult_calendar/calendar.html.twig');
     }
 
@@ -114,6 +121,7 @@ class ConsultCalendarController extends AbstractController
      */
     public function save(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
       
         $title = $request->request->get("title");
 
@@ -140,7 +148,7 @@ class ConsultCalendarController extends AbstractController
      */
     public function modify(Request $request,ConsultCalendar $consultCalendar): Response
     {
-      
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $title = $request->request->get("title");
 
         $start= new \DateTime($request->request->get("start"));

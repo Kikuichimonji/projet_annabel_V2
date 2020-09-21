@@ -123,9 +123,13 @@ class PatientRepository extends ServiceEntityRepository
         //}
         //else
        //{
-            $query = $this->createQueryBuilder("p")
-            ->select("c","p")
-            ->join("p.cabinet","c");
+            if($data->cabinets)
+                $query = $this->createQueryBuilder("p")
+                ->select("c","p")
+                ->join("p.cabinet","c");
+            else
+                $query = $this->createQueryBuilder("p")
+                ->select("p");
 
             if(!empty($data->q))
             {

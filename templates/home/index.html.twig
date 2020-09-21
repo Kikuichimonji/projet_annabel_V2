@@ -12,7 +12,7 @@
                 {% else %}
                     <li>
                 {% endif %}
-                    <a href="{{path("home_detail",{"id":cabinet.id})}}">{{cabinet.libelle}}</a>
+                    <a href="{{path("home_detail",{"id":cabinet.id})}}">{{cabinet.libelle |e}}</a>
                 </li>
             {% endif %}
         {% endfor %}
@@ -26,7 +26,7 @@
         {% set class= "admin" %}
     {% endif %}
     <div class="uk-navbar-right">
-        Connecté en tant que : <span class="username {{class}}"> {{app.user.username}}</span>
+        Connecté en tant que : <span class="username {{class |e}}"> {{app.user.username |e}}</span>
          <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
     </div>
 </nav>
@@ -46,17 +46,20 @@
                 <a class="admin" href="{{path("admin_utilisateur")}}"> <span uk-icon="pencil"></span>Editer les utilisateurs</a>       
         {% endif %}
     </div>
-    <h2 class="uk-heading-line uk-text-center"><span>Liste des patients ({{patients.getTotalItemCount}})</span></h2>
+
+    <h2 class="uk-heading-line uk-text-center"><span>Liste des patients ({{patients.getTotalItemCount |e}})</span></h2>
     {{ form_start(form) }}
-        <!--<button type="submit">filtrer</button>-->
+        
     {{ form_end(form) }}
     <table class="uk-table-striped uk-table-hover uk-table-small uk-table">
         <thead>
             <tr>
                 <th>Nom</th>
                 <th>Prenom</th>
+                {% if is_granted('ROLE_ADMIN') %}
                 <th>Telephone</th>
                 <th>Adresse</th>
+                {% endif %}
                 <th>Date de dernière consultation</th>
                 {% if is_granted('ROLE_ADMIN') %}
                     <th>Suppression</th>
@@ -66,15 +69,14 @@
         <tbody>
             {% for patient in patients %}
             
-            <tr class="trClic" id="{{patient.id}}">
-                <td><a id="aClic{{patient.id}}" onclick="return checkCabinet()" href="{{path('patient_edit',{'idc':app.session.get("cabinet").getId(),'id':patient.id})}}">{{patient.nom}}</a></td>
-                <td>{{patient.prenom}}</td>
-                <td>{% if is_granted('ROLE_ADMIN') %}
-                        {{patient.numFixe}}
-                    {% endif %}</td>
-                <td>{% if is_granted('ROLE_ADMIN') %}
-                        {{patient.adresse ~" "~ patient.codePostal ~" "~ patient.ville}}
-                    {% endif %}</td>
+            <tr class="trClic" id="{{patient.id|e}}">
+                <td><a id="aClic{{patient.id|e}}" onclick="return checkCabinet()"
+                 href="{{path('patient_edit',{'idc':app.session.get("cabinet").getId(),'id':patient.id})}}">{{patient.nom}}</a></td>
+                <td>{{patient.prenom|e}}</td>
+                {% if is_granted('ROLE_ADMIN') %}
+                <td>{{patient.numFixe|e}}</td>
+                <td>{{patient.adresse ~" "~ patient.codePostal ~" "~ patient.ville |e}}</td>
+                {% endif %}
                 {% if patient.GetLastConsultationDate %}
                     {% set dateConsult =  patient.getLastConsultationDate %}
                     {% set tdclass = "" %}
@@ -82,7 +84,7 @@
                     {% set dateConsult =  "Pas de consultation" %}
                     {% set tdclass = "dimTD" %}
                 {% endif %}
-                    <td class="{{tdclass}}">{{dateConsult}}</td>
+                    <td class="{{tdclass|e}}">{{dateConsult}}</td>
                 {% if is_granted('ROLE_ADMIN') %}
                     <td id="tdDelete">
                     {% if not patient.GetLastConsultationDate %}

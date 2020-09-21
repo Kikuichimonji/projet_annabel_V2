@@ -29,8 +29,8 @@ class CabinetController extends AbstractController
     }
 
     /**
-     * @Route("/cabinetEdit/", name="admin_add_cabinet")
-     * @Route("/cabinetEdit/{id}", name="admin_edit_cabinet")
+     * @Route("/cabinet/Edit", name="admin_add_cabinet")
+     * @Route("/cabinet/Edit/{id}", name="admin_edit_cabinet")
      * @IsGranted("ROLE_ADMIN")
      */
     public function editUser(Cabinet $cabinet = null,Request $request)
@@ -62,7 +62,7 @@ class CabinetController extends AbstractController
 
 
     /**
-     * @Route("/deleteCabinet/{id}", name="admin_delete_cabinet")
+     * @Route("/cabinet/delete/{id}", name="admin_delete_cabinet")
      * @IsGranted("ROLE_ADMIN")
      */
     public function deleteUtilisateur(Cabinet $cabinet)

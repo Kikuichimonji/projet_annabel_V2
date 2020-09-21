@@ -24,23 +24,23 @@ class ConsultationType extends AbstractType
             ->add('date_consult',DateType::class,[
                 'widget' => 'single_text',
                 "label" => "Date de consultation",
-                "attr" => ["class" => "uk-input"],
+                "attr" => ["class" => "uk-input consultReq"],
             ])
             ->add('anamnese',TextareaType::class,[
-                "attr" => ["class" => "uk-textarea"],
+                "attr" => ["class" => "uk-textarea consultReq"],
                 "label" => "Anamnèse"
                 ])
             ->add('test',TextareaType::class,[
-                "attr" => ["class" => "uk-textarea"],
+                "attr" => ["class" => "uk-textarea consultReq"],
                 ])
             ->add('traitement',TextareaType::class,[
-                "attr" => ["class" => "uk-textarea"],
+                "attr" => ["class" => "uk-textarea consultReq"],
                 ])
             ->add('conseil',TextareaType::class,[
-                "attr" => ["class" => "uk-textarea"],
+                "attr" => ["class" => "uk-textarea consultReq"],
                 ])
             ->add('note',TextareaType::class,[
-                "attr" => ["class" => "uk-textarea"],
+                "attr" => ["class" => "uk-textarea consultReq"],
                 ])
             ->add('moyen_paiement',EntityType::class,[
                     "attr" => ["class" => "consultRadioButton"],
@@ -51,7 +51,7 @@ class ConsultationType extends AbstractType
                     ])
                     
             ->add('montant',IntegerType::class,[
-                "attr" => ["class" => "uk-input"],
+                "attr" => ["class" => "uk-input consultReq"],
                 ])
             ->add('numero_cheque',TextType::class,[
                 "attr" => ["class" => "uk-input"],
