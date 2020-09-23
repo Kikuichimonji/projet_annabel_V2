@@ -66,85 +66,127 @@ span.uk-form-icon{
 }
 .vLine
 {
-  border:1px solid;
-  border-color: lightgrey;
+  border:2px solid;
+  display: block;
+  width:80px;
+  margin: auto;
+  margin-top: 0.2em;
+  margin-bottom: 1em;
 }
 #mainWraps
 {
-  max-width: 1500px;
+  max-width: 100%;
+  margin: auto;
+  color: #333333
 }
 #mainWraps h2
 {
   margin: auto;
   text-align: center;
-  margin-top: 1em;
-  margin-bottom: 1em;
+  padding-top: 1.5em;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 1.5rem;
 }
 #subWrap
 {
   display: flex;
   flex-flow: row wrap;
   margin: auto;
-  justify-content: space-evenly;
-  border-radius: 25px;
+  justify-content: space-between;
+  max-width: 700px;
 }
 #globalAntWrap #subWrap
 {
  width: 100%;
 }
+#adminWrap
+{
+  max-width: 100%;
+}
 .wraps
 {
-  width: 45%;
-  padding-top: 0.5em;
-  padding-bottom: 1.5em;
+  width:45%;
+  padding-top: 1em;
+  padding-bottom: 2em;
 }
 .wrapsAnt,.subConsult
 {
   padding-top: 0.5em;
-  padding-bottom: 1.5em;
+  padding-bottom: 0.5em;
+}
+#subAnt
+{
+  width: 100%;
+  margin: auto;
+}
+#consultation
+{
+  width:700px;
+  margin: auto;
 }
 .wraps input,.wraps textarea,.wrapsAnt textarea,.subConsult textarea,.subConsult input
 {
   margin-bottom: 0.5em;
+}
+textarea
+{
+  height: 60px;
 }
 .subConsult div.consultRadioButton
 {
   margin-left:1em;
   padding-bottom: 0.5em;
 }
-.adminstratif
+.adminstratif,#adminWrap
 {
-  background-color: #f9eac3;
+  background-color: #abe0e0;
 }
 span.vLine.administratif
 {
-  border-color: #ecd28f;
+  border-color: #4bc9be;
+
 }
 .antecedent
 {
-  background-color: #CCDDFF;
+  background-color: #e6e5f0;
 }
 span.vLine.antecedent
 {
-  border-color: #9ebfff;
+  border-color: #b2adda;
+}
+span.vLine.consultation
+{
+  border-color: #d6705a;
+  margin-bottom: 2em;
+}
+#globalConsultWrap
+{
+  background-color:#f19b87;
+  
+}
+.consultblock
+{
+  background-color:#f19b87;
 }
 .subConsult
 {
-  background-color:#ffbbcc;
-  border-radius: 25px;
-  margin-bottom: 1em;
+  margin: auto;
+  margin-bottom: -4em;
+  width:100%;
+  padding-top: 2em;
 }
 
 #globalAntWrap
 {
   display: flex;
   flex-flow: column wrap;
-  border-radius: 25px;
+  padding-bottom: 1em;
 }
-.wrapsAnt,.subConsult div
+#aWrapInsideAWrap
 {
-  width: 90%;
-  margin: auto;
+  width: 700px;
+  margin: auto
 }
 .buttonPadding
 {

@@ -22,11 +22,16 @@
                 font-family: 'Noto Sans JP';
                 src: url({{ asset('font/NotoSansJP-Regular.otf') }}) format('sans-serif');
             }
+            @font-face {
+                font-family: 'Noto Sans JP Medium';
+                src: url({{ asset('font/NotoSansJP-Medium.otf') }}) format('sans-serif');
+            }
             </style>
         {% endblock %}
     </head>
     <body>
-        <main class="uk-container uk-container-large">
+        <!--<main class="uk-container uk-container-large">-->
+        <main>
             {% block nav %}
             {% endblock %}
             {% block body %}

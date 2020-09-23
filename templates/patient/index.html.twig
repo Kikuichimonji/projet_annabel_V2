@@ -26,83 +26,95 @@
 <div id="mainWraps">
 
     {{form_start(form)}}
+    
+    <div id="adminWrap">
     <h2>Administratif</h2>
-    <div id="subWrap" class="adminstratif">
-        <div class="wraps">
-            {{ form_row(form.nom) }}
-            {{ form_row(form.prenom) }}
-            {{ form_row(form.sexe) }}
-            {{ form_row(form.dateNaissance) }}
-            {{ form_row(form.profession) }}
-            {{ form_row(form.loisir) }}
-        </div>
-        {% if is_granted('ROLE_ADMIN') %} 
-            {% set hidden = "hidden" %}
-        {% endif %}      
-            <span class= "vLine administratif "></span>
-            <div class="wraps ">
-                {{ form_row(form.adresse) }}
-                {{ form_row(form.codePostal) }}
-                {{ form_row(form.ville) }}
-                {{ form_row(form.numFixe) }}
-                {{ form_row(form.numPortable) }}
-                {{ form_row(form.email) }}
-            
+     <span class= "vLine administratif "></span>
+        <div id="subWrap" class="adminstratif">
+            <div class="wraps">
+                {{ form_row(form.nom) }}
+                {{ form_row(form.prenom) }}
+                {{ form_row(form.sexe) }}
+                {{ form_row(form.dateNaissance) }}
+                {{ form_row(form.profession) }}
+                {{ form_row(form.loisir) }}
             </div>
+            {% if is_granted('ROLE_ADMIN') %} 
+                {% set hidden = "hidden" %}
+            {% endif %}      
+               
+                <div class="wraps ">
+                    {{ form_row(form.adresse) }}
+                    {{ form_row(form.codePostal) }}
+                    {{ form_row(form.ville) }}
+                    {{ form_row(form.numFixe) }}
+                    {{ form_row(form.numPortable) }}
+                    {{ form_row(form.email) }}
+                
+                </div>
+        </div>
     </div>
-    <h2>Antécédents</h2>
     <div id="globalAntWrap" class="antecedent">
-        <div id="subWrap" class="antecedent">
-            <div class="wraps">
-                {{ form_row(form.antTete) }}
-                {{ form_row(form.antOrl) }}
-                {{ form_row(form.antOphtalmo) }}
-                {{ form_row(form.antAuditif) }}
-                {{ form_row(form.antDent) }} 
-                {{ form_row(form.antEndoc) }}
-                {{ form_row(form.antPulmo) }}
+    <h2>Antécédents</h2>
+    <span class= "vLine antecedent"></span>
+        <div id="aWrapInsideAWrap">
+            <div id="subWrap" class="antecedent">
+            
+                <div class="wraps">
+                    {{ form_row(form.antTete) }}
+                    {{ form_row(form.antOrl) }}
+                    {{ form_row(form.antOphtalmo) }}
+                    {{ form_row(form.antAuditif) }}
+                    {{ form_row(form.antDent) }} 
+                    {{ form_row(form.antEndoc) }}
+                    {{ form_row(form.antPulmo) }}
+                </div>
+                
+                <div class="wraps">
+                    {{ form_row(form.antCardia) }}
+                    {{ form_row(form.antDigest) }}
+                    {{ form_row(form.antUrin) }}
+                    {{ form_row(form.antGyneco) }}
+                    {{ form_row(form.antDermato) }}
+                    {{ form_row(form.antFamille) }}
+                </div>
             </div>
-            <span class= "vLine antecedent"></span>
-            <div class="wraps">
-                {{ form_row(form.antCardia) }}
-                {{ form_row(form.antDigest) }}
-                {{ form_row(form.antUrin) }}
-                {{ form_row(form.antGyneco) }}
-                {{ form_row(form.antDermato) }}
-                {{ form_row(form.antFamille) }}
+            
+            <div id="subAnt">
+                <div class="wrapsAnt">
+                    <label>Traumatologiques</label>
+                    {{ form_row(form.antTrauma) }}
+                </div>
+                <div class="wrapsAnt">
+                    <label>Opérations</label>
+                    {{ form_row(form.antOpe) }}
+                </div>
+                <div class="wrapsAnt">
+                    <label>Prise de médicaments</label>
+                    {{ form_row(form.antPriseMedic) }}
+                </div>
             </div>
-        </div>
-        <span class= "vLine antecedent"></span>
-        <div class="wrapsAnt">
-            <h3>Traumatologiques</h3>
-            {{ form_row(form.antTrauma) }}
-        </div>
-        <div class="wrapsAnt">
-            <h3>Opérations</h3>
-            {{ form_row(form.antOpe) }}
-        </div>
-        <div class="wrapsAnt">
-            <h3>Prise de médicaments</h3>
-            {{ form_row(form.antPriseMedic) }}
         </div>
     </div>
         
- 
-    <h2>Consultations</h2>
-    <div id="consultation" data-patient="{{ patient.id |e}}"
-        data-prototype="{{ form_widget(form.consultations.vars.prototype)|e }}"
-        data-widget-tags="{{ '<div class="consultblock"></div>'|e }}"
-        data-cabinet="{{ app.session.get("cabinet").getId() |e}}"
-        data-idUtilisateur="{{ app.user.getId() |e }}">
-        {% for consult in form.consultations %}
-            <div class="consultblock">
-                {{ form_errors(consult) }}
-                {{ form_widget(consult) }}
-            </div>
-        {% endfor %}
+    <div id="globalConsultWrap">
+        <h2>Consultations</h2>
+        <span class= "vLine consultation"></span>
+        <div id="consultation" data-patient="{{ patient.id |e}}"
+            data-prototype="{{ form_widget(form.consultations.vars.prototype)|e }}"
+            data-widget-tags="{{ '<div class="consultblock"></div>'|e }}"
+            data-cabinet="{{ app.session.get("cabinet").getId() |e}}"
+            data-idUtilisateur="{{ app.user.getId() |e }}">
+            {% for consult in form.consultations %}
+                <div class="consultblock">
+                    {{ form_errors(consult) }}
+                    {{ form_widget(consult) }}
+                </div>
+            {% endfor %}
+        <button id='add' class="uk-button-secondary uk-button">Nouvelle sceance</button>
+        <span id="error"></span>
     </div>
-    <button id='add' class="uk-button-secondary uk-button">Nouvelle sceance</button>
-    <span id="error"></span>
+    </div>
     {{ form_end(form) }}
     
 </div>
