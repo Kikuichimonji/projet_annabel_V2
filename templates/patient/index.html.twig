@@ -97,7 +97,6 @@
         </div>
     </div>
         
-<<<<<<< HEAD
     <div id="globalConsultWrap">
         <h2>Consultations</h2>
         <span class= "vLine consultation"></span>
@@ -107,21 +106,20 @@
             data-cabinet="{{ app.session.get("cabinet").getId() |e}}"
             data-idUtilisateur="{{ app.user.getId() |e }}">
             {% for consult in form.consultations %}
-                <div class="consultblock">
+                <div class="consultblock" id="{{consult.id.vars.value}}">
                     {{ form_errors(consult) }}
                     {{ form_widget(consult) }}
                 </div>
             {% endfor %}
-        <button id='add' class="uk-button-secondary uk-button">Nouvelle sceance</button>
-        <span id="error"></span>
-    </div>
+            <button id='add' class="uk-button-secondary uk-button">Nouvelle sceance</button>
+        </div>
+         <span id="error"></span>
     </div>
     {{ form_end(form) }}
-    
 </div>
 
-
 {% endblock %}
+
 {% block javascripts %}
      {{ parent() }}
 
@@ -134,28 +132,37 @@
             //On récupère la dernière consultation 
             let consultList = document.getElementsByClassName("consultblock")
             let lastConsult = consultList[consultList.length -1]
-
-            //On récupère la liste des input required 
-            let inputList = lastConsult.getElementsByClassName("consultReq")
-            let isOkay = 1
-
-            //On vérifie que les radio bouton sont bien check
-            if(!lastConsult.querySelector('input:checked'))
-                isOkay = 0
+        
+            //Si il n'existe pas de consultation alors on skip les vérifications
+            if(lastConsult)
+            {
                 
-            //On vérifie chaque input pour voir si ils ont bien une valeur
-            Array.prototype.forEach.call(inputList,function(input){
-                if(!input.value)
-                    isOkay = 0
-            });
+                //On récupère la liste des input required 
+                let inputList = lastConsult.getElementsByClassName("consultReq")
+                var isOkay = 1
 
+                //On vérifie que les radio bouton sont bien check
+                if(!lastConsult.querySelector('input:checked'))
+                    isOkay = 0
+                    
+                //On vérifie chaque input pour voir si ils ont bien une valeur
+                Array.prototype.forEach.call(inputList,function(input){
+                    if(!input.value)
+                        isOkay = 0
+                });
+            }
+            else
+                isOkay = 1
+            
             //Si tout est okay on passe a la verif suivante
             if(isOkay) 
             {   
                 /*On regarde dans le dernier champs contenant le texte à ajouter après la consultation si
-                il contient bien une valeur, si ce n'est pas le cas on demande à l'utilisateur d'enregistrer la consult*/
+                il contient bien une valeur, si ce n'est pas le cas on demande à l'utilisateur d'enregistrer la consult
+                On vérifie aussi si il existe bien un block */
                 dateListe = document.querySelectorAll("input[name$='[texte]']")
-                if(dateListe[dateListe.length-1].value)
+
+                if(!dateListe.length || dateListe[dateListe.length-1].value)
                 {
                     addButton = event.currentTarget
 
@@ -165,8 +172,14 @@
                     let counter = idList.length
 
                     //On prend l'id du dernier block et on l'incrémente pour avoir une ID unique 
-                    let uniqueID = idList[counter-1].id
-                    uniqueID ++ 
+                    //Si il n'y a pas d'id précédente on attribue le 1 par default
+                    if(counter)
+                    {
+                        uniqueID = idList[counter-1].id
+                        uniqueID ++ 
+                    }
+                    else
+                        uniqueID = 1
 
                     //On récupère le prototype de consultation 
                     let consultationBlock = document.getElementById("consultation")
@@ -213,8 +226,10 @@
 
                     /*On cache le block precedent pour qu'il n'y ai qu'un block affiché tout en vérifiant quu'il n'est pas déjà caché 
                     (ex: on crée un evenement juste après en avoir supprimé un, donc rien a cacher)*/
+                    
                     let previousBlock = idList[idList.length -2].id
-                    let previousBlockStyle = document.getElementById(previousBlock).children[0].style.display 
+                    let previousBlockStyle = document.getElementById(previousBlock).children[0].style.display
+                    
                     if(counter && !previousBlockStyle)
                         hideBlock(previousBlock)
         
@@ -293,7 +308,7 @@
             newId = idArray[index+1]
 
             //Grâce à l'id suivante on scroll pour afficher la dernière
-            var newblock = document.getElementById(newId)
+            let newblock = document.getElementById(newId)
             newblock.scrollIntoView({behavior: "smooth"})
             
             //Creation du bouton Show/Hide et initialisation du statut
