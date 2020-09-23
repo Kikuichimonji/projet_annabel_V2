@@ -35,7 +35,7 @@ span.uk-form-icon{
   text-align:center;
 }
 .hidden,#patient_cabinet{
-  visibility: hidden;
+  display: none;
 }
 .deleted{
   display:none;

@@ -76,6 +76,11 @@ class ConsultationType extends AbstractType
                 "label" => false,
                 "required" => false,
             ])
+            ->add('id',IntegerType::class,[
+                "attr" => ["class" => "hidden idConsult"],
+                "label" => false,
+                "required" => false,
+            ])
         ;
     }
 
