@@ -55,6 +55,15 @@ span.uk-form-icon{
 {
   font-weight: bold;
 }
+#globalWraps
+{
+  width: 1200px;
+  margin:auto;
+}
+#cabinets input
+{
+  margin-left: 1em;;
+}
 .consultblock
 {
   border-bottom: 1px lightgray solid;

@@ -37,7 +37,8 @@
                      {% elseif error == 2 %}Vous ne pouvez pas supprimer un patient qui a des consultations
 
                      {% endif %}
-        </div>
+    </div>
+<div id="globalWraps">
     <div id="aTop">
         <a onclick="return checkCabinet()" href="{{path('patient_add',{'idc':app.session.get("cabinet").getId()})}}"><span uk-icon="icon: plus-circle; ratio: 1.5"></span> Ajouter un nouveau patient</a>
         <a href="{{ path('agenda') }}"><span uk-icon="icon:calendar"></span>Agenda</a>
@@ -100,7 +101,7 @@
     <div class="bootstrap">
         {{ knp_pagination_render(patients) }}
     </div>
-
+</div>
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
