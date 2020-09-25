@@ -51,7 +51,7 @@
         </span>
     </div>
     <div id="navbarCenter">
-        <a id="homeFull" href="{{path("home_detail",{"id":app.session.get("cabinet").getId()})}}"><h1>Accueil<h1></a>
+        <a id="homeFull" href="{{path("home_detail",{"id":app.session.get("cabinet").getId()})}}"><h1>Accueil</h1></a>
         <a id="homeSmall" href="{{path("home_detail",{"id":app.session.get("cabinet").getId()})}}"><span uk-icon="icon:home;ratio: 2"></span></a>
     </div>
     <div id="navbarRight">
@@ -61,7 +61,7 @@
 </nav>
 {% endblock %}
 {% block body %}
-<div id="homeWraps" class="uk-container uk-container-xlarge">
+<div id="homeWraps">
 {% set error = app.request.query.get("err")%}
     <div id="error">{% if error == 1 %}Ce cabinet n'existe pas 
                      {% elseif error == 2 %}Vous ne pouvez pas supprimer un patient qui a des consultations

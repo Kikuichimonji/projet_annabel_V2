@@ -1,9 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block title %}Fiche patient{% endblock %}
-
 {% block nav %}
-<nav class="uk-navbar-container" uk-navbar>
-    <div class="uk-navbar-left">
+    {% set class= "" %}
+    {% if is_granted('ROLE_ADMIN') %}
+        {% set class= "admin" %}
+    {% endif %}
+<nav id="navbar" class="uk-navbar-container" uk-navbar>
+    <div id="navbarLeft">
         <ul class="uk-navbar-nav">
            <li class="uk-active">
                 <a href="{{path('home_detail',{'id':app.session.get("cabinet").getId()}) |e}}">Accueil - 
@@ -12,16 +15,16 @@
             </li>
         </ul>
     </div>
-    <div >
-        <a class="uk-navbar-center" href=""><h1>Fiche Patient<h1></a>
+    <div id="navbarCenter">
+        <a id="homeFull" href="{{path("home_detail",{"id":app.session.get("cabinet").getId()})}}"><h1>Accueil</h1></a>
+        <a id="homeSmall" href="{{path("home_detail",{"id":app.session.get("cabinet").getId()})}}"><span uk-icon="icon:home;ratio: 2"></span></a>
     </div>
-    
-    <div class="uk-navbar-right">
-        Connecté en tant que : <strong>{{app.user.username |e}}</strong> <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
+    <div id="navbarRight">
+        <span id="connect">Connecté en tant que : </span><span class="username {{class |e}}"> {{app.user.username |e}}</span>
+         <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
     </div>
 </nav>
 {% endblock %}
-
 {% block body %}
 <div id="mainWraps">
 
@@ -344,17 +347,18 @@
         //fonction mettant en place les evenements des radio boutons de moyen de paiement, pour afficher ou cacher le numero de chèque  
         function setupRadio(counter)
         {
+            
             //On utilise le querySelector pour chercher tout les elements correspondant aux critères
             let radioPaiement = document.querySelectorAll("input[name='patient[consultations]["+counter+"][moyen_paiement]']");
             let radioCount = 0;
-            
             // On parcours tout les boutons du block radio bouton
             for(rb of radioPaiement)
             {
                 
                 // on donne une idée unique a chaque bouton pour cibler les effets de l'évenement de click
+                
                 radioPaiement[radioCount].mainId = counter;
-               
+                
                 radioPaiement[radioCount].addEventListener("click",clicRadio);
 
                 //si un choxi est présent au chargement et qu'il n'est pas "chèque" on cache tout de suite le champ
@@ -401,6 +405,14 @@
                 putDeleteButton(forms)
             });
 
+            let allInput = document.querySelectorAll("input")
+            Array.prototype.forEach.call(allInput, function(input){
+                input.disabled= true;
+            })
+            let allText = document.querySelectorAll("TEXTAREA")
+            Array.prototype.forEach.call(allText, function(input){
+                input.disabled= true;
+            })
 
 
              //Ce compteur sert a savoir si des consultations existe déjà 
