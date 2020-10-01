@@ -29,7 +29,7 @@
                         <span uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Cabinets</span>
                     </a>
                     <div class="uk-navbar-dropdown">
-                         <ul class="uk-nav uk-navbar-dropdown-nav">
+                        <ul class="uk-nav uk-navbar-dropdown-nav">
                         {% for cabinet in cabinets %}
                             {% if app.session.get("cabinet") %}             
                                 {% if cabinet.id == app.session.get("cabinet").getId() %}
@@ -95,7 +95,7 @@
                 <th>Telephone</th>
                 <th>Adresse</th>
                 {% endif %}
-                <th>Date de dernière consultation<</th>
+                <th>Date de dernière consultation</th>
                 {% if is_granted('ROLE_ADMIN') %}
                     <th>Suppression</th>
                 {% endif %}
@@ -106,7 +106,7 @@
             
             <tr class="trClic" id="{{patient.id|e}}">
                 <td><a id="aClic{{patient.id|e}}" onclick="return checkCabinet()"
-                 href="{{path('patient_edit',{'idc':app.session.get("cabinet").getId(),'id':patient.id})}}">{{patient.nom}}</a></td>
+                href="{{path('patient_edit',{'idc':app.session.get("cabinet").getId(),'id':patient.id})}}">{{patient.nom}}</a></td>
                 <td>{{patient.prenom|e}}</td>
                 {% if is_granted('ROLE_ADMIN') %}
                 <td>{{patient.numFixe|e}}</td>

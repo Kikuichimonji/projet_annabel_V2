@@ -116,7 +116,7 @@
             {% endfor %}
             <button id='add' class="uk-button-secondary uk-button">Nouvelle séance</button>
         </div>
-         <span id="error"></span>
+        <span id="error"></span>
     </div>
     {{ form_end(form) }}
 </div>
@@ -405,11 +405,12 @@
                 putDeleteButton(forms)
             });
 
-            let allInput = document.querySelectorAll("input")
+            let consultInput = document.getElementById("consultation")
+            let allInput = consultInput.querySelectorAll("input")
             Array.prototype.forEach.call(allInput, function(input){
                 input.disabled= true;
             })
-            let allText = document.querySelectorAll("TEXTAREA")
+            let allText = consultInput.querySelectorAll("TEXTAREA")
             Array.prototype.forEach.call(allText, function(input){
                 input.disabled= true;
             })
@@ -442,6 +443,5 @@
             addButton.addEventListener("click",addNewBlock)
         })
 
-     
-     </script>
+    </script>
 {% endblock %}

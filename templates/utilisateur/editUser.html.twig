@@ -1,19 +1,17 @@
 {% extends 'base.html.twig' %}
 {% block nav %}
-
-<nav class="uk-navbar-container" uk-navbar>
-    <div >
-        <a class="uk-navbar-center" href="{{path("home_detail",{"id":0})}}"><h1>Accueil<h1></a>
+{% set class= "" %}
+{% if is_granted('ROLE_ADMIN') %}
+    {% set class= "admin" %}
+{% endif %}
+<nav id="navbar" class="uk-navbar-container" uk-navbar>
+    <div id="navbarCenter">
+        <a id="homeFull" href="{{path("home_detail",{"id":app.session.get("cabinet").getId()})}}"><h1>Accueil</h1></a>
+        <a id="homeSmall" href="{{path("home_detail",{"id":app.session.get("cabinet").getId()})}}"><span uk-icon="icon:home;ratio: 2"></span></a>
     </div>
-    {% set class= "" %}
-    {% if is_granted('ROLE_ADMIN') %}
-        {% set class= "admin" %}
-    {% endif %}
-    <div class="uk-navbar-right">
-        Connecté en tant que : {% if is_granted('ROLE_ADMIN') %}
-            <a class="admin" href="{{path("admin_utilisateur")}}"><span uk-icon="pencil"></span></a>
-        {% endif %}<span class="username {{class}}"> {{app.user.username}}</span>
-         <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
+    <div id="navbarRight">
+        <span id="connect">Connecté en tant que : </span><span class="username {{class |e}}"> {{app.user.username |e}}</span>
+        <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
     </div>
 </nav>
 {% endblock %}
