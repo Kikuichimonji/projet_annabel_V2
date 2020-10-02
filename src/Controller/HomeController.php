@@ -60,14 +60,13 @@ class HomeController extends AbstractController
             ->getRepository(Patient::class)
             ->getAll($data);
         }
-       
+    
         
         //On redirige sur la liste des patients avec toute les données nécessaire
         return $this->render('home/index.html.twig', [
             "patients" => $patients,
             "cabinets" => $cabinets,
             'form' => $form->createView(),
-        
         ]);
     }
 
