@@ -20,7 +20,7 @@ class AppFixtures extends Fixture
     {
         $admin = new Utilisateur();
 
-        $admin->setUsername('Osteo');
+        $admin->setUsername('OsteoAdmin');
         $admin->setPassword(
             $this->passwordEncoder->encodePassword(
                 $admin,"osteoAdmin00!"

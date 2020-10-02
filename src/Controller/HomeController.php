@@ -67,7 +67,7 @@ class HomeController extends AbstractController
             "patients" => $patients,
             "cabinets" => $cabinets,
             'form' => $form->createView(),
-          
+        
         ]);
     }
 

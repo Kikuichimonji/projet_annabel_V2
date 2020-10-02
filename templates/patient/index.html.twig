@@ -8,7 +8,7 @@
 <nav id="navbar" class="uk-navbar-container" uk-navbar>
     <div id="navbarLeft">
         <ul class="uk-navbar-nav">
-           <li class="uk-active">
+            <li class="uk-active">
                 <a href="{{path('home_detail',{'id':app.session.get("cabinet").getId()}) |e}}">Accueil - 
                     {{app.session.get("cabinet").getLibelle()|e}}
                 </a>
@@ -21,7 +21,7 @@
     </div>
     <div id="navbarRight">
         <span id="connect">Connecté en tant que : </span><span class="username {{class |e}}"> {{app.user.username |e}}</span>
-         <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
+        <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
     </div>
 </nav>
 {% endblock %}
@@ -32,7 +32,7 @@
     
     <div id="adminWrap">
     <h2>Administratif</h2>
-     <span class= "vLine administratif "></span>
+    <span class= "vLine administratif "></span>
         <div id="subWrap" class="adminstratif">
             <div class="wraps">
                 {{ form_row(form.nom) }}

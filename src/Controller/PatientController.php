@@ -41,12 +41,11 @@ class PatientController extends AbstractController
                 "id" => $idc,
                 "err" => $err,
                 ]);
-                 
-         
+                
+        
         $entityManager = $this->getDoctrine()->getManager();
         $form = $this->createForm(PatientType::class,$patient);
         $form->handleRequest($request);
-       
 
 
 
