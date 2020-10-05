@@ -8,5 +8,6 @@ App\Entity\Patient:
     adresse : <streetAddress()>
     code_postal : <postcode()>
     ville : <city()>
+    utilisateur : '<numberBetween(1,2)>x @utilisateur_*'
 
 

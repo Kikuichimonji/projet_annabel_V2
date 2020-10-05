@@ -42,11 +42,13 @@
                 {{ form_row(form.profession) }}
                 {{ form_row(form.loisir) }}
             </div>
-            {% if is_granted('ROLE_ADMIN') %} 
+   
+            {% if is_granted('ROLE_ADMIN') or new or form.utilisateur.vars.value == app.user.getId() %} 
+                {% set hidden = "" %}
+            {% else %}
                 {% set hidden = "hidden" %}
             {% endif %}      
-               
-                <div class="wraps ">
+                <div class="wraps {{hidden}}">
                     {{ form_row(form.adresse) }}
                     {{ form_row(form.codePostal) }}
                     {{ form_row(form.ville) }}
@@ -124,9 +126,9 @@
 {% endblock %}
 
 {% block javascripts %}
-     {{ parent() }}
+    {{ parent() }}
 
-     <script>     
+    <script>     
         function addNewBlock(event)
         { 
             
@@ -173,12 +175,16 @@
                     let idList = document.getElementsByClassName("consultblock")
                     //On compte le nombre de block de consultation déjà présent
                     let counter = idList.length
-
                     //On prend l'id du dernier block et on l'incrémente pour avoir une ID unique 
                     //Si il n'y a pas d'id précédente on attribue le 1 par default
+                    console.log(idList)
                     if(counter)
                     {
-                        uniqueID = idList[counter-1].id
+                        let idArray = []
+                        Array.prototype.forEach.call(idList,function(consult){
+                            idArray.push(consult.id)
+                        });
+                        uniqueID = Math.max(...idArray)
                         uniqueID ++ 
                     }
                     else
@@ -390,6 +396,8 @@
             let consultationBlock = document.getElementById("consultation")
             // on recupère l'id du cabinet de la session qui a  été stocké dans les dataset 
             var idCabinet = consultationBlock.dataset.cabinet
+            if(!document.getElementById("patient_utilisateur").value)
+                document.getElementById("patient_utilisateur").value = consultationBlock.dataset.idutilisateur
 
             //on récupère le select et on ajoute le cabinet actuel dans la liste des cabinet visité du patient
             let patientCabinet = document.getElementById("patient_cabinet");
@@ -408,11 +416,11 @@
             let consultInput = document.getElementById("consultation")
             let allInput = consultInput.querySelectorAll("input")
             Array.prototype.forEach.call(allInput, function(input){
-                input.disabled= true;
+                input.readOnly= true;
             })
             let allText = consultInput.querySelectorAll("TEXTAREA")
             Array.prototype.forEach.call(allText, function(input){
-                input.disabled= true;
+                input.readOnly= true;
             })
 
 

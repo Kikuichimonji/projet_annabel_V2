@@ -20,8 +20,12 @@ class PatientController extends AbstractController
     public function addPatient(Patient $patient = null,Request $request,$idc = null,$err = null)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $newPatient = 0;
         if(!$patient)
+        {
             $patient = new Patient();
+            $newPatient = 1;
+        }
         if(!$err)
             $err = 1;
         
@@ -46,13 +50,13 @@ class PatientController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $form = $this->createForm(PatientType::class,$patient);
         $form->handleRequest($request);
-
+        //dd($form->getData());
 
 
         if($form->isSubmitted() && $form->isValid())
         {
             $patient = $form->getData();
-            //dd($patient->getConsultations());
+            //dd($patient);
             $entityManager->persist($patient,$cabinets);
             $entityManager->flush();
 
@@ -67,6 +71,7 @@ class PatientController extends AbstractController
             "patient" => $patient,
             "cabinets" => $cabinets,
             "utilisateurs" => $utilisateurs,
+            "new" => $newPatient,
         ]);
     }
 

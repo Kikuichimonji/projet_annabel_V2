@@ -92,6 +92,7 @@ class Patient
 
     /**
      * @ORM\OneToMany(targetEntity=Consultation::class, mappedBy="patient", cascade={"persist"},orphanRemoval=true)
+     * @ORM\OrderBy({"date_consult" = "ASC"})
      */
     private $consultations;
 
@@ -179,6 +180,12 @@ class Patient
      * @ORM\Column(type="text", nullable=true)
      */
     private $antPriseMedic;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="patients")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $utilisateur;
 
 
     public function __construct()
@@ -654,6 +661,18 @@ class Patient
     public function setAntFamille(?string $antFamille): self
     {
         $this->antFamille = $antFamille;
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?utilisateur $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }

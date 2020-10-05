@@ -41,9 +41,15 @@ class Utilisateur implements UserInterface
      */
     private $consultations;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Patient::class, mappedBy="utilisateur")
+     */
+    private $patients;
+
     public function __construct()
     {
         $this->consultations = new ArrayCollection();
+        $this->patients = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -139,6 +145,37 @@ class Utilisateur implements UserInterface
             // set the owning side to null (unless already changed)
             if ($consultation->getUtilisateur() === $this) {
                 $consultation->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Patient[]
+     */
+    public function getPatients(): Collection
+    {
+        return $this->patients;
+    }
+
+    public function addPatient(Patient $patient): self
+    {
+        if (!$this->patients->contains($patient)) {
+            $this->patients[] = $patient;
+            $patient->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removePatient(Patient $patient): self
+    {
+        if ($this->patients->contains($patient)) {
+            $this->patients->removeElement($patient);
+            // set the owning side to null (unless already changed)
+            if ($patient->getUtilisateur() === $this) {
+                $patient->setUtilisateur(null);
             }
         }
 

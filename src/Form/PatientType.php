@@ -4,13 +4,17 @@ namespace App\Form;
 
 use App\Entity\Cabinet;
 use App\Entity\Patient;
+use App\Entity\Utilisateur;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
@@ -20,6 +24,15 @@ class PatientType extends AbstractType
     {
         
         $builder
+            ->add('utilisateur',EntityType::class,[
+                'class' => Utilisateur::class,
+                'choice_label' => 'id',
+                "attr" => [
+                    "class" => "hidden",
+                ],
+                "label" => false,    
+                "placeholder" => ""   
+            ])
             ->add('nom', TextType::class,[
                 "attr" => ["class" => "uk-input"]
             ])
@@ -178,6 +191,11 @@ class PatientType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Patient::class,
         ]);
-      
+    
+    }
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        
     }
 }

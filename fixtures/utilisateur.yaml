@@ -1,0 +1,4 @@
+App\Entity\Utilisateur:
+  utilisateur_{1..2}:
+    username: <username()>
+    password: hello
