@@ -151,6 +151,7 @@
                     isOkay = 0
                     
                 //On vérifie chaque input pour voir si ils ont bien une valeur
+                
                 Array.prototype.forEach.call(inputList,function(input){
                     if(!input.value)
                         isOkay = 0
@@ -175,7 +176,7 @@
                     let idList = document.getElementsByClassName("consultblock")
                     //On compte le nombre de block de consultation déjà présent
                     let counter = idList.length
-                    //On prend l'id du dernier block et on l'incrémente pour avoir une ID unique 
+                    //On prend l'id le plus haut et on l'incrémente pour avoir une ID unique 
                     //Si il n'y a pas d'id précédente on attribue le 1 par default
                     console.log(idList)
                     if(counter)
