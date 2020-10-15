@@ -37,15 +37,15 @@ class PatientRepository extends ServiceEntityRepository
         $entityManager= $this->getEntityManager();
         $query = $entityManager->createQuery(
             "SELECT p
-             FROM App\Entity\Patient p
-             ORDER BY p.id"
+            FROM App\Entity\Patient p
+            ORDER BY p.id"
         );
         //return  $query->execute();
         return $this->paginator->paginate(
             $query,
             $data->page,
             10
-     );
+    );
     }
 
     public function getByCabinet(Cabinet $cabinet)

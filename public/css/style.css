@@ -42,6 +42,7 @@ label
   justify-content: space-around;
   align-items: center;
   min-width:360px;
+  background: rgb(239, 239, 239);
 }
 #navbarCenter h1
 {

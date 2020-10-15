@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Cabinet;
 use App\Entity\Utilisateur;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -19,7 +20,8 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $admin = new Utilisateur();
-
+        $cabinet = new Cabinet();
+        $cabinet->setLibelle("Logelbach");
         $admin->setUsername('OsteoAdmin');
         $admin->setPassword(
             $this->passwordEncoder->encodePassword(
@@ -27,7 +29,8 @@ class AppFixtures extends Fixture
             )
         );
         $admin->setRoles(["ROLE_ADMIN"]);
-        $manager->persist($admin);
+        
+        $manager->persist($admin,$cabinet);
         $manager->flush();
     }
 }
