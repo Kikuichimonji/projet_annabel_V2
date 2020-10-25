@@ -30,7 +30,8 @@ class AppFixtures extends Fixture
         );
         $admin->setRoles(["ROLE_ADMIN"]);
         
-        $manager->persist($admin,$cabinet);
+        $manager->persist($cabinet);
+        $manager->persist($admin);
         $manager->flush();
     }
 }

@@ -112,17 +112,54 @@
             data-idUtilisateur="{{ app.user.getId() |e }}">
             {% for consult in form.consultations %}
                 <div class="consultblock" id="{{consult.id.vars.value}}">
-                    {{ form_errors(consult) }}
-                    {{ form_widget(consult) }}
+                    <div id=""block{{consult.id.vars.value}}"">
+                        <div id="label{{consult.id.vars.value}}">
+                            <label>Date de Consultation</label>
+                            <p> - {{consult.vars.value.dateConsult| date("d/m/Y")}}</p>
+                            <label>Anamnèse</label>
+                            <p> - {{consult.vars.value.anamnese}}</p>
+                            <label>Test</label>
+                            <p> - {{consult.vars.value.test}}</p>
+                            <label>Traitement</label>
+                            <p> - {{consult.vars.value.traitement}}</p>
+                            <label>Conseil</label>
+                            <p> - {{consult.vars.value.conseil}}</p>
+                            <label>Note</label>
+                            <p> - {{consult.vars.value.note}}</p>
+                            <label>Moyen de paiement</label>
+                            <p> - {{consult.vars.value.moyenPaiement.libelle}}</p>
+                            <label>Montant</label>
+                            <p> - {{consult.vars.value.montant}} €</p>
+                            {% if consult.vars.value.moyenPaiement.libelle=="Chèque" %}
+                                <label>Numéro de chèque</label>
+                                <p> - {{consult.vars.value.numeroCheque}}</p>
+                            {% endif %}
+                            <button id='edit{{consult.id.vars.value}}' class="uk-button-default uk-button">Editer</button>
+                        </div>
+                        <div id="input{{consult.id.vars.value}}">
+                            {{ form_errors(consult) }}
+                            {{ form_widget(consult) }}
+                        </div>
+                    </div>
                 </div>
             {% endfor %}
             <button id='add' class="uk-button-secondary uk-button">Nouvelle séance</button>
         </div>
         <span id="error"></span>
     </div>
-    {{ form_end(form) }}
+    <div id="submit">
+        {{ form_end(form) }}
+    </div>
 </div>
-
+<div id="dialog" class="hidden" title="Erreur">
+    <p>Veuillez remplir tout les champs</p>
+</div>
+<div id="dialog2" class="hidden" title="Erreur">
+    <p>Veuillez enregistrer la consultation avant d'en démarrer une nouvelle</p>
+</div>
+<div id="delete" class="hidden" title="Attention">
+    <p>Voulez-vous vraiment supprimer cette consultation?</p>
+</div>
 {% endblock %}
 
 {% block javascripts %}
@@ -137,7 +174,7 @@
             //On récupère la dernière consultation 
             let consultList = document.getElementsByClassName("consultblock")
             let lastConsult = consultList[consultList.length -1]
-        
+
             //Si il n'existe pas de consultation alors on skip les vérifications
             if(lastConsult)
             {
@@ -178,7 +215,7 @@
                     let counter = idList.length
                     //On prend l'id le plus haut et on l'incrémente pour avoir une ID unique 
                     //Si il n'y a pas d'id précédente on attribue le 1 par default
-                    console.log(idList)
+                    
                     if(counter)
                     {
                         let idArray = []
@@ -231,25 +268,50 @@
                     var selectUtilisateur = document.getElementById("patient_consultations_"+uniqueID+"_utilisateur");
                     selectUtilisateur.value = idUtilisateur
 
+                    let idCabinet = consultationBlock.dataset.cabinet
+                    let selectCabinet = document.getElementById("patient_consultations_"+uniqueID+"_cabinet")
+                    selectCabinet.value = idCabinet
+
                     //On met en place les évenement des radio bouton
                     setupRadio(uniqueID)
 
                     /*On cache le block precedent pour qu'il n'y ai qu'un block affiché tout en vérifiant quu'il n'est pas déjà caché 
                     (ex: on crée un evenement juste après en avoir supprimé un, donc rien a cacher)*/
                     
-                    let previousBlock = idList[idList.length -2].id
-                    let previousBlockStyle = document.getElementById(previousBlock).children[0].style.display
-                    
+                    if(idList.length > 1)
+                    {
+                        var previousBlock = idList[idList.length -2].id
+                        var previousBlockStyle = document.getElementById(previousBlock).children[0].style.display
+                    }
+                    else
+                        previousBlockStyle = null
+
                     if(counter && !previousBlockStyle)
                         hideBlock(previousBlock)
         
                     document.getElementById("error").innerHTML = ""
                 }
                 else  
-                    document.getElementById("error").innerHTML = "Veuillez enregistrer la consultation avant d'en démarrer une nouvelle"
+                    $("#dialog2").dialog({
+                        modal:true,
+                        buttons: {
+                            Ok: function() {
+                            $( this ).dialog( "close" );
+                            }
+                        }
+                    });
             }
             else
-                document.getElementById("error").innerHTML = "Tous les champs de la consultation ne sont pas remplis"
+            {
+                $("#dialog").dialog({
+                    modal:true,
+                    buttons: {
+                        Ok: function() {
+                        $( this ).dialog( "close" );
+                        }
+                    }
+                });
+            }
         }
 
         // Fonction permetant d'ajouter un bouton supression à la fin du formulaire de consultation
@@ -259,14 +321,28 @@
             let deleteButton = document.createElement("BUTTON")
             deleteButton.className = "uk-button-danger buttonPadding"
             deleteButton.innerHTML = "Supprimer"
-
+            
+            
             //Le bouton est attaché à la fin du formulaire
             form.append(deleteButton)
 
             //On attache l'évenement click au bouton qui permetra de supprimer le formulaire
-            deleteButton.addEventListener("click",function()
+            
+            deleteButton.addEventListener("click",function(event)
             {
-                form.remove()
+                event.preventDefault()
+                $("#delete").dialog({
+                        modal:true,
+                        buttons: {
+                            Supprimer: function() {
+                                $( this ).dialog( "close" );
+                                form.remove()
+                            },
+                            Annuler: function() {
+                                $( this ).dialog( "close" );    
+                            }
+                        }
+                    });      
             });
         }
 
@@ -276,19 +352,20 @@
             // but est le bouton d'affichage correspondant au bon block où l'on click
             let but = event.currentTarget
             event.preventDefault()
+            mainBlock = but.labelList.parentNode
 
             //on verifie qu'il y a bien un statut puis on alterne entre afficher et cacher
             if(but.statut)
                 if (but.statut == "hidden")
                 {
                     but.statut = "shown"
-                    but.block.style.display = "block";
+                    mainBlock.style.display = "block";
                     but.innerHTML = "Cacher";
                 }  
                 else
                 {
                     but.statut = "hidden"
-                    but.block.style.display = "none"
+                    mainBlock.style.display = "none"
                     but.innerHTML = "Détails";
                 }
         }
@@ -297,12 +374,21 @@
         function hideBlock(id)
         {
             
+            var editButton = document.getElementById("edit"+id)
+            editButton.addEventListener("click",editConsult)
+
             //On cherche le block avec l'id reçue puis on le cache
-            var block = document.getElementById(id).children[0]
-            block.style.display = "none"
-    
+            var labelBlock = document.getElementById(id).children[0].children[0]
+            var inputBlock = document.getElementById(id).children[0].children[1]
+            var mainBlock = document.getElementById(id).children[0]
+
+            labelBlock.style.display = "initial"
+            inputBlock.style.display = "none"
+            mainBlock.style.display = "none"
+
             //On lui donne une classe pour le CSS
-            block.className="subConsult"
+            mainBlock.className="subConsult"
+            
 
             // On récupère la liste des consultations
             let idList = document.getElementsByClassName("consultblock")
@@ -338,15 +424,16 @@
             let consultDate = document.createElement("SPAN")
         
             //On recupère le champ texte qui contient le resultat de la propiété getTexte() pour la date et l'utilisateur
-            consultDate.innerHTML = block.querySelector("input[name$='[texte]']").value
+            consultDate.innerHTML = inputBlock.querySelector("input[name$='[texte]']").value
             consultDate.className = "spanDate"
         
             //On attache la date après le bouton 
             show.append(consultDate)
             
             //On attache l'évènement d'alternance au bouton et on lui donne des paramètres facilement atteignable via l'évenement
+            showButton.inputList = inputBlock   
+            showButton.labelList = labelBlock  
             showButton.addEventListener("click",hideShowBlock);
-            showButton.block = block   
             
             
         }
@@ -390,6 +477,16 @@
                 document.getElementById("patient_consultations_"+radio.mainId+"_montant").value= 0
         }
 
+        function editConsult(event)
+        {
+            let but = event.currentTarget
+            event.preventDefault()
+            id = (but.id).replace('edit','')
+            inputBlock = document.getElementById("input"+id)
+            labelBlock = document.getElementById("label"+id)
+            inputBlock.style.display = "initial"
+            labelBlock.style.display = "none"
+        }
         //On attend que le DOM sois chargé avant de lancer les fonctions afin de ne pas avoir de soucis de synchronisation
         //$(document).ready(function()
         window.addEventListener('DOMContentLoaded',function()
@@ -414,7 +511,7 @@
                 putDeleteButton(forms)
             });
 
-            let consultInput = document.getElementById("consultation")
+            /*let consultInput = document.getElementById("consultation")
             let allInput = consultInput.querySelectorAll("input")
             Array.prototype.forEach.call(allInput, function(input){
                 input.readOnly= true;
@@ -422,7 +519,7 @@
             let allText = consultInput.querySelectorAll("TEXTAREA")
             Array.prototype.forEach.call(allText, function(input){
                 input.readOnly= true;
-            })
+            })*/
 
 
              //Ce compteur sert a savoir si des consultations existe déjà 
@@ -436,8 +533,11 @@
                     if(i==counter-1)
                     {
                         //on applique le CSS au dernier block visible
-                        var consultBlock = document.getElementById(idList[i].value).children[0]
-                        consultBlock.className="subConsult"
+                        var inputBlock = document.getElementById(idList[i].value).children[0].children[1]
+                        inputBlock.parentNode.className="subConsult"
+                        inputBlock.style.display= "none"
+                        let editButton = document.getElementById("edit"+idList[i].value)
+                        editButton.addEventListener("click",editConsult)
                     } 
                     else  
                         hideBlock(idList[i].value)  //si le block n'est pas le dernier on le cache
@@ -450,6 +550,17 @@
             //On recupère le bouton de nouvelle sceance 
             let addButton = document.getElementById("add")
             addButton.addEventListener("click",addNewBlock)
+            let consultList = document.getElementsByClassName("consultblock")
+            let lastConsult = consultList[consultList.length -1]
+            if(!lastConsult)
+            {
+                var clic = new MouseEvent("click",{
+                    'view':window,
+                    'bubbles':true,
+                    'cancelable':true
+                });
+                addButton.dispatchEvent(clic)
+            }
         })
 
     </script>

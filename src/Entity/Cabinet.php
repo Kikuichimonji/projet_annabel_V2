@@ -29,9 +29,15 @@ class Cabinet
      */
     private $patients;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Consultation::class, mappedBy="cabinet")
+     */
+    private $consultations;
+
     public function __construct()
     {
         $this->patients = new ArrayCollection();
+        $this->consultations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -74,6 +80,36 @@ class Cabinet
         if ($this->patients->contains($patient)) {
             $this->patients->removeElement($patient);
             $patient->removeCabinet($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Consultation[]
+     */
+    public function getConsultations(): Collection
+    {
+        return $this->consultations;
+    }
+
+    public function addConsultation(Consultation $consultation): self
+    {
+        if (!$this->consultations->contains($consultation)) {
+            $this->consultations[] = $consultation;
+            $consultation->setCabinet($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConsultation(Consultation $consultation): self
+    {
+        if ($this->consultations->removeElement($consultation)) {
+            // set the owning side to null (unless already changed)
+            if ($consultation->getCabinet() === $this) {
+                $consultation->setCabinet(null);
+            }
         }
 
         return $this;

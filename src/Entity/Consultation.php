@@ -75,6 +75,11 @@ class Consultation
      */
     private $utilisateur;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Cabinet::class, inversedBy="consultations")
+     */
+    private $cabinet;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -213,11 +218,23 @@ class Consultation
     }
 
     public function getTexte(){
-        return "Consultation du ".$this->date_consult->format("d/m/Y")." par ".$this->utilisateur->getUsername();
+        return "Consultation du ".$this->date_consult->format("d/m/Y")." par ".$this->utilisateur->getUsername()." à : ".$this->cabinet->getLibelle();
     }
 
     public function setTexte(String $texte = null){
         $this->texte = $texte;
+
+        return $this;
+    }
+
+    public function getCabinet(): ?Cabinet
+    {
+        return $this->cabinet;
+    }
+
+    public function setCabinet(?Cabinet $cabinet): self
+    {
+        $this->cabinet = $cabinet;
 
         return $this;
     }

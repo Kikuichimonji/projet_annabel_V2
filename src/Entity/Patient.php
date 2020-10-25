@@ -652,7 +652,7 @@ class Patient
     public function getLastConsultationDate()
     {
         if($this->getConsultations()->last())
-            $date = date_format($this->getConsultations()->last()->getDateConsult(),"d/m/Y");
+            $date = date_format($this->getConsultations()->last()->getDateConsult(),"d/m/Y")." à : ".$this->getConsultations()->last()->getCabinet()->getLibelle();
         else
             $date =null;
         return $date;

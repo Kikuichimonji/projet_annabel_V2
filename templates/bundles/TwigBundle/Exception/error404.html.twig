@@ -2,7 +2,6 @@
 {% block title %}Erreur 404{% endblock %}
 
 {% block nav %}
-{% block nav %}
 {% set class= "" %}
 {% if is_granted('ROLE_ADMIN') %}
     {% set class= "admin" %}
@@ -12,14 +11,10 @@
         <a id="homeFull" href="{{path("home_detail",{"id":app.session.get("cabinet").getId()})}}"><h1>Accueil</h1></a>
         <a id="homeSmall" href="{{path("home_detail",{"id":app.session.get("cabinet").getId()})}}"><span uk-icon="icon:home;ratio: 2"></span></a>
     </div>
-    <div id="navbarRight">
-        <span id="connect">Connecté en tant que : </span><span class="username {{class |e}}"> {{app.user.username |e}}</span>
-        <a href="{{path('app_logout')}}"><span uk-icon="icon:close; ratio: 1.5"></span></a>
-    </div>
 </nav>
 {% endblock %}
 {% block body %}
-    <div >
-        <h1>Cette page n'existe pas<h1>
+    <div id="customError">
+        <h2>Cette page n'existe pas, veuillez retourner à l'acceuil</h2>
     </div>
 {% endblock %}
