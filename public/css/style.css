@@ -1,6 +1,7 @@
 
 *{
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Noto Sans JP', sans-serif;
+  /*font-family: 'Open Sans', sans-serif;*/
 }
 h1,h2,h3,h4,h5,h6{
   font-family: 'Roboto', sans-serif;
@@ -309,39 +310,56 @@ span.vLine.consultation
 }
 #globalConsultWrap
 {
-  background-color:#f1ab9c;
+  background-color:#FCB4A4;
   
 }
 .consultblock
 {
-  background-color:#f1ab9c;
-  border-bottom: 1px lightgray solid;
+  background-color:#FCB4A4;
+  /*border-bottom: 1px lightgray solid;*/
   margin-bottom: 1em;
 }
 .subConsult
 {
-  margin: auto;
+
   width:100%;
   padding-top: 2em;
-  border: 1px solid black;
+  padding-bottom: 1em;
+  border: 1px solid lightcoral;
   padding-left: 1em;
+  border-radius: 25px;
+  background-color: #FFCCB3;
+  /*background-color: #F3F2FF;*/
+  
+  margin-bottom: 0.5em;
 }
 .subConsult p
 {
   margin-top:0;
+  margin-left: 0.5em;
+  margin-right: 1em;
+  text-align: justify;
 }
 .subConsult button
 {
   background-color: lightgreen;
   font-weight: bold;
+  border-bottom-left-radius: 15px;
+  border-top-right-radius: 15px;
 }
 .subConsult button:hover
 {
   background-color: green;
   color:white;
-  
 }
-
+div[id*="label"] label 
+{
+  font-size: 1.2em;
+}
+div[id*="patient_consultation"] 
+{
+  margin-right: 1em;
+}
 #globalAntWrap
 {
   display: flex;
@@ -394,6 +412,7 @@ span.vLine.consultation
   margin: auto;
   max-width: 700px;
 }
+
 /*/////////////////
     AGENDA
 ////////////////*/

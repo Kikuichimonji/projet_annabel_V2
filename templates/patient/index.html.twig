@@ -115,24 +115,24 @@
                     <div id=""block{{consult.id.vars.value}}"">
                         <div id="label{{consult.id.vars.value}}">
                             <label>Date de Consultation</label>
-                            <p> - {{consult.vars.value.dateConsult| date("d/m/Y")}}</p>
+                            <p>{{consult.vars.value.dateConsult| date("d/m/Y")}}</p>
                             <label>Anamnèse</label>
-                            <p> - {{consult.vars.value.anamnese}}</p>
+                            <p>{{consult.vars.value.anamnese |capitalize}}</p>
                             <label>Test</label>
-                            <p> - {{consult.vars.value.test}}</p>
+                            <p>{{consult.vars.value.test |capitalize}}</p>
                             <label>Traitement</label>
-                            <p> - {{consult.vars.value.traitement}}</p>
+                            <p>{{consult.vars.value.traitement |capitalize}}</p>
                             <label>Conseil</label>
-                            <p> - {{consult.vars.value.conseil}}</p>
+                            <p>{{consult.vars.value.conseil |capitalize}}</p>
                             <label>Note</label>
-                            <p> - {{consult.vars.value.note}}</p>
+                            <p>{{consult.vars.value.note |capitalize}}</p>
                             <label>Moyen de paiement</label>
-                            <p> - {{consult.vars.value.moyenPaiement.libelle}}</p>
+                            <p>{{consult.vars.value.moyenPaiement.libelle |capitalize}}</p>
                             <label>Montant</label>
-                            <p> - {{consult.vars.value.montant}} €</p>
+                            <p>{{consult.vars.value.montant}} €</p>
                             {% if consult.vars.value.moyenPaiement.libelle=="Chèque" %}
                                 <label>Numéro de chèque</label>
-                                <p> - {{consult.vars.value.numeroCheque}}</p>
+                                <p>{{consult.vars.value.numeroCheque}}</p>
                             {% endif %}
                             <button id='edit{{consult.id.vars.value}}' class="uk-button-default uk-button">Editer</button>
                         </div>
