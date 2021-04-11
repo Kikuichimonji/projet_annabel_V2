@@ -272,6 +272,15 @@
                     let selectCabinet = document.getElementById("patient_consultations_"+uniqueID+"_cabinet")
                     selectCabinet.value = idCabinet
 
+                    let dateConsultForm = document.getElementById("patient_consultations_"+uniqueID+"_date_consult")
+
+                    var now = new Date();
+                    var day = ("0" + now.getDate()).slice(-2);
+                    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+                    var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+
+                    dateConsultForm.value = today;
+
                     //On met en place les évenement des radio bouton
                     setupRadio(uniqueID)
 
@@ -445,6 +454,7 @@
             //On utilise le querySelector pour chercher tout les elements correspondant aux critères
             let radioPaiement = document.querySelectorAll("input[name='patient[consultations]["+counter+"][moyen_paiement]']");
             let radioCount = 0;
+            radioPaiement[0].checked = true
             // On parcours tout les boutons du block radio bouton
             for(rb of radioPaiement)
             {

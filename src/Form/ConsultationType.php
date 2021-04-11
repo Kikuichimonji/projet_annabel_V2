@@ -28,19 +28,24 @@ class ConsultationType extends AbstractType
                 "attr" => ["class" => "uk-input consultReq"],
             ])
             ->add('anamnese',TextareaType::class,[
+                "required" => false,
                 "attr" => ["class" => "uk-textarea consultReq"],
                 "label" => "Anamnèse"
                 ])
             ->add('test',TextareaType::class,[
+                "required" => false,
                 "attr" => ["class" => "uk-textarea consultReq"],
                 ])
             ->add('traitement',TextareaType::class,[
+                "required" => false,
                 "attr" => ["class" => "uk-textarea consultReq"],
                 ])
             ->add('conseil',TextareaType::class,[
+                "required" => false,
                 "attr" => ["class" => "uk-textarea consultReq"],
                 ])
             ->add('note',TextareaType::class,[
+                "required" => false,
                 "attr" => ["class" => "uk-textarea consultReq"],
                 ])
             ->add('moyen_paiement',EntityType::class,[
@@ -52,6 +57,7 @@ class ConsultationType extends AbstractType
                     ])
                     
             ->add('montant',IntegerType::class,[
+                "required" => false,
                 "attr" => ["class" => "uk-input consultReq"],
                 ])
             ->add('numero_cheque',TextType::class,[

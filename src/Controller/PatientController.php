@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Cabinet;
 use App\Entity\Patient;
-use App\Entity\Utilisateur;
 use App\Form\PatientType;
+use App\Entity\Utilisateur;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -25,6 +25,9 @@ class PatientController extends AbstractController
         {
             $patient = new Patient();
             $newPatient = 1;
+            $patient->setPrenom('Vide');
+            $patient->setNom("Vide");
+            $patient->setDateNaissance(new \DateTime());
         }
         if(!$err)
             $err = 1;
@@ -75,7 +78,7 @@ class PatientController extends AbstractController
         ]);
     }
 
-     /**
+    /**
      * @Route("/DeletePatient/{id}", name="patient_delete_full")
      * @Route("/DeletePatient/{idc}/{id}", name="patient_delete_cabinet")
      * @IsGranted("ROLE_ADMIN")

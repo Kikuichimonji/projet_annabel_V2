@@ -26,7 +26,7 @@ class Patient
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $prenom;
 
@@ -36,7 +36,7 @@ class Patient
     private $sexe;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      */
     private $dateNaissance;
 

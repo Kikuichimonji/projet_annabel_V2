@@ -34,13 +34,17 @@ class PatientType extends AbstractType
                 "placeholder" => ""   
             ])
             ->add('nom', TextType::class,[
+                "required" => false,
                 "attr" => ["class" => "uk-input"]
+                
             ])
             ->add('prenom', TextType::class,[
+                "required" => false,
                 "attr" => ["class" => "uk-input"],
                 "label" => "Prénom",
             ])
             ->add('sexe', TextType::class,[
+                "required" => false,
                 "attr" => ["class" => "uk-input"]
             ])
             ->add('dateNaissance',DateType::class,[
@@ -49,12 +53,15 @@ class PatientType extends AbstractType
                 "attr" => ["class" => "uk-input"]
             ])
             ->add('adresse', TextType::class,[
+                "required" => false,
                 "attr" => ["class" => "uk-input"]
             ])
             ->add('codePostal', TextType::class,[
+                "required" => false,
                 "attr" => ["class" => "uk-input date"]
             ])
             ->add('ville', TextType::class,[
+                "required" => false,
                 "attr" => ["class" => "uk-input"]
             ])
             ->add('numFixe', TextType::class,[
