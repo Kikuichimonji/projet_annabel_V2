@@ -103,7 +103,7 @@
     </div>
         
     <div id="globalConsultWrap">
-        <h2>Consultations</h2>
+        <h2>Consultation</h2>
         <span class= "vLine consultation"></span>
         <div id="consultation" data-patient="{{ patient.id |e}}"
             data-prototype="{{ form_widget(form.consultations.vars.prototype)|e }}"
@@ -168,13 +168,11 @@
     <script>     
         function addNewBlock(event)
         { 
-            
             event.preventDefault()
 
             //On récupère la dernière consultation 
             let consultList = document.getElementsByClassName("consultblock")
             let lastConsult = consultList[consultList.length -1]
-
             //Si il n'existe pas de consultation alors on skip les vérifications
             if(lastConsult)
             {
@@ -257,7 +255,6 @@
                     //On attribue une classe au block de formulaire pour le css (sans les boutons de suppression et de visibilité)
                     var subConsultBlock = document.getElementById(uniqueID).children[0]
                     subConsultBlock.className="subConsult"
-                    
                     //On force le bon patient dans le selecteur d'objet patient du formulaire
                     idPatient= consultationBlock.dataset.patient
                     var selectPatient = document.getElementById("patient_consultations_"+uniqueID+"_patient");
@@ -267,13 +264,11 @@
                     idUtilisateur = consultationBlock.dataset.idutilisateur
                     var selectUtilisateur = document.getElementById("patient_consultations_"+uniqueID+"_utilisateur");
                     selectUtilisateur.value = idUtilisateur
-
                     let idCabinet = consultationBlock.dataset.cabinet
                     let selectCabinet = document.getElementById("patient_consultations_"+uniqueID+"_cabinet")
                     selectCabinet.value = idCabinet
 
                     let dateConsultForm = document.getElementById("patient_consultations_"+uniqueID+"_date_consult")
-
                     var now = new Date();
                     var day = ("0" + now.getDate()).slice(-2);
                     var month = ("0" + (now.getMonth() + 1)).slice(-2);
@@ -454,7 +449,8 @@
             //On utilise le querySelector pour chercher tout les elements correspondant aux critères
             let radioPaiement = document.querySelectorAll("input[name='patient[consultations]["+counter+"][moyen_paiement]']");
             let radioCount = 0;
-            radioPaiement[0].checked = true
+            if(radioPaiement[0])
+                radioPaiement[0].checked = true
             // On parcours tout les boutons du block radio bouton
             for(rb of radioPaiement)
             {
@@ -484,7 +480,7 @@
             
             //Choix par default si la consultation n'as pas encore été payée
             if(radio.value == 3)
-                document.getElementById("patient_consultations_"+radio.mainId+"_montant").value= 0
+                document.getElementById("patient_consultations_"+radio.mainId+"_montant").value=0
         }
 
         function editConsult(event)
